@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentDialog x:Class="PSXMaster.Views.DeleteGameContentDialog"
+               xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+               xmlns:local="using:PSXMaster.Views"
+               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+               Title="Confirm Deletion"
+               PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+               PrimaryButtonText="Delete [Enter]"
+               SecondaryButtonText="Cancel [Esc]"
+               Style="{ThemeResource DefaultContentDialogStyle}"
+               mc:Ignorable="d">
+
+    <ContentDialog.KeyboardAccelerators>
+        <KeyboardAccelerator Key="Enter"
+                             Invoked="OnEnterInvoked" />
+    </ContentDialog.KeyboardAccelerators>
+    <Grid Width="500"
+          Padding="10">
+        <TextBlock Text="Are you sure you want to delete selected items?" />
+    </Grid>
+</ContentDialog>

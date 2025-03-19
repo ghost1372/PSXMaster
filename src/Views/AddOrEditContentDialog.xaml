@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentDialog x:Class="PSXMaster.Views.AddOrEditContentDialog"
+               xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+               xmlns:local="using:PSXMaster.Views"
+               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+               PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+               SecondaryButtonText="Cancel [Esc]"
+               Style="{ThemeResource DefaultContentDialogStyle}"
+               mc:Ignorable="d">
+    <ContentDialog.KeyboardAccelerators>
+        <KeyboardAccelerator Key="Enter"
+                             Invoked="OnEnterInvoked" />
+    </ContentDialog.KeyboardAccelerators>
+    <StackPanel Width="500"
+                Padding="10"
+                Spacing="10">
+        <TextBox Header="Game Id"
+                 PlaceholderText="CUSA00341 Or PPSA05684"
+                 Text="{x:Bind GameId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBox Header="Title"
+                 PlaceholderText="Uncharted™: Legacy of Thieves Collection"
+                 Text="{x:Bind GameTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBox Header="Link"
+                 PlaceholderText="http://gst.prod.dl.playstation.net/0.pkg"
+                 Text="{x:Bind Link, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+    </StackPanel>
+</ContentDialog>

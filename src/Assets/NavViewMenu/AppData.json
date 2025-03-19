@@ -1,0 +1,41 @@
+﻿{
+  "$schema": "https://raw.githubusercontent.com/Ghost1372/DevWinUI/refs/heads/main/AppData.Schema.json",
+  "Groups": [
+    {
+      "Title": "PSXMaster",
+      "UniqueId": "PSXMaster",
+      "IsSpecialSection": false,
+      "ShowItemsWithoutGroup": true,
+      "IsExpanded": false,
+      "Items": [
+        {
+          "UniqueId": "PSXMaster.Views.HomeLandingPage",
+          "Title": "Home",
+          "ImagePath": "ms-appx:///Assets/AppIcon.png",
+          "HideItem": true
+        },
+        {
+          "UniqueId": "PSXMaster.Views.GameTransferPage",
+          "Title": "Game Transfer",
+          "Subtitle": "Allows you to move your PS4 and PS5 games from PC to Console.",
+          "ImagePath": "ms-appx:///Assets/Fluent/TransferGame.png",
+          "IsNew": true
+        },
+        {
+          "UniqueId": "PSXMaster.Views.QueueGamesPage",
+          "Title": "Favorite Games",
+          "Subtitle": "List of Favorite Games",
+          "ImagePath": "ms-appx:///Assets/Fluent/Favorite.png",
+          "IsNew": true
+        },
+        {
+          "UniqueId": "PSXMaster.Views.GameDetailsPage",
+          "Title": "Game Details",
+          "Subtitle": "Check for Updates, Regions and Title",
+          "ImagePath": "ms-appx:///Assets/Fluent/GameDetail.png",
+          "IsNew": true
+        }
+      ]
+    }
+  ]
+}

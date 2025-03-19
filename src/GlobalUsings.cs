@@ -1,0 +1,11 @@
+﻿global using CommunityToolkit.Mvvm.ComponentModel;
+global using CommunityToolkit.Mvvm.Input;
+global using DevWinUI;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.UI.Xaml;
+global using Microsoft.UI.Xaml.Controls;
+global using Microsoft.UI.Xaml.Navigation;
+global using PSXMaster.ViewModels;
+global using PSXMaster.Views;
+global using static PSXMaster.Common.AppHelper;
+global using static PSXMaster.Common.LoggerSetup;

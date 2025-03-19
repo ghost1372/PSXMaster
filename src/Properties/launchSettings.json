@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "PSXMaster (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "PSXMaster (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

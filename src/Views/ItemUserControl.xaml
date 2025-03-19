@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<UserControl x:Class="PSXMaster.Views.ItemUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:dev="using:DevWinUI"
+             xmlns:local="using:PSXMaster.Views"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d">
+    <Grid Padding="0,0,15,0"
+          ColumnSpacing="5"
+          RowSpacing="5">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0"
+                   Grid.Column="0"
+                   VerticalAlignment="Center"
+                   Text="Url" />
+        <TextBox Grid.Row="0"
+                 Grid.Column="1"
+                 AcceptsReturn="True"
+                 IsReadOnly="True"
+                 PlaceholderText="URL: "
+                 Text="{x:Bind Game.Link, Mode=OneWay}" />
+        <StackPanel Grid.RowSpan="3"
+                    Grid.Column="2"
+                    Margin="5,0,0,0"
+                    Spacing="5">
+            <dev:CopyButton Click="OnCopyButton"
+                            Content="&#xE8C8;" />
+            <dev:CopyButton Click="OnDownloadButton"
+                            Content="&#xe896;"
+                            ToolTipService.ToolTip="Download With IDM (The link will be automatically added to the download list)" />
+            <dev:CopyButton x:Name="FavButton"
+                            Click="OnFavoriteButton"
+                            ToolTipService.ToolTip="Add to Favorite List">
+                <dev:CopyButton.Content>
+                    <FontIcon Glyph="&#xE728;" />
+                </dev:CopyButton.Content>
+            </dev:CopyButton>
+        </StackPanel>
+        <TextBlock Grid.Row="1"
+                   Grid.Column="0"
+                   VerticalAlignment="Center"
+                   Text="File Path" />
+        <TextBox Grid.Row="1"
+                 Grid.Column="1"
+                 VerticalAlignment="Top"
+                 IsReadOnly="True"
+                 PlaceholderText="File Path "
+                 Text="{x:Bind Game.FilePath, Mode=OneWay}" />
+        <StackPanel Grid.Row="2"
+                    Grid.ColumnSpan="2"
+                    Orientation="Horizontal"
+                    Spacing="10">
+            <dev:Shield Click="Shield_Click"
+                        PointerEntered="Shield_PointerEntered"
+                        PointerExited="Shield_PointerExited"
+                        Status="{x:Bind Game.TitleID, Mode=OneWay}"
+                        Subject="{x:Bind Game.Console, Mode=OneWay}"
+                        ToolTipService.ToolTip="Click to Copy" />
+            <dev:Shield Status="{x:Bind Game.UrlLastPart, Mode=OneWay}"
+                        Subject="FileName" />
+        </StackPanel>
+    </Grid>
+</UserControl>
