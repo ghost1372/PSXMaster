@@ -15,7 +15,7 @@ env:
   CHECK_TAG_EXISTENCE_BEFORE_CREATING_TAG: false
   
   # Custom Nuget Source
-  IS_COMMUNITY_TOOLKIT_NUGET_SOURCE_ENABLED: false
+  IS_COMMUNITY_TOOLKIT_NUGET_SOURCE_ENABLED: true
   IS_CUSTOM_NUGET_SOURCE_ENABLED: false
   CUSTOM_NUGET_SOURCES: '' # Example ('https://api.nuget.org/v3/index.json, https://api.nuget.org/v2/index.json,...')
 
