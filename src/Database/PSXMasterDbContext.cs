@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PSXMaster.Common;
 using PSXMaster.Database.Tables;
 
 namespace PSXMaster.Database;
@@ -10,7 +11,7 @@ public class PSXMasterDbContext : DbContext
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        string filename = $"{AppContext.BaseDirectory}Games.db";
+        string filename = Constants.DatabaseFilePath;
         if (!string.IsNullOrEmpty(Settings.DBPath))
         {
             filename = $"{Settings.DBPath}";

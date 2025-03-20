@@ -24,6 +24,11 @@ public partial class App : Application
     {
         Services = ConfigureServices();
         this.InitializeComponent();
+
+        if (!Directory.Exists(Settings.LocalFileDirectory))
+        {
+            Directory.CreateDirectory(Settings.LocalFileDirectory);
+        }
     }
 
     private static IServiceProvider ConfigureServices()

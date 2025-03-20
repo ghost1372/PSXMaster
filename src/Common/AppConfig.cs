@@ -6,8 +6,8 @@ namespace PSXMaster.Common;
 [GenerateAutoSaveOnChange]
 public partial class AppConfig : NotifiyingJsonSettings, IVersionable
 {
-    [EnforcedVersion("1.1.0.0")]
-    public virtual Version Version { get; set; } = new Version(1, 1, 0, 0);
+    [EnforcedVersion("1.2.0.0")]
+    public virtual Version Version { get; set; } = new Version(1, 2, 0, 0);
 
     private string fileName { get; set; } = Constants.AppConfigPath;
 
@@ -20,9 +20,9 @@ public partial class AppConfig : NotifiyingJsonSettings, IVersionable
 
     private bool isAutoFindFile { get; set; } = true;
 
-    private string? localFileDirectory { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "PSXMaster");
+    private string? localFileDirectory { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "PSXMaster");
 
     private int bufferSize { get; set; } = 2 * 1024 * 1024;
 
-    private string dBPath { get; set; } = $"{AppContext.BaseDirectory}Games.db";
+    private string dBPath { get; set; } = Constants.DatabaseFilePath;
 }
