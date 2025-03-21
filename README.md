@@ -5,9 +5,10 @@
 
 See [PSXMaster Releases](https://github.com/ghost1372/PSXMaster/releases) or Download from Microsoft Store.
 
-> [!TIP]
-> Store Link will be available soon.
-
+<a href="https://apps.microsoft.com/detail/PSXMaster/9n71hm7q8sxk?launch=true
+	&mode=mini">
+	<img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200"/>
+</a>
 ---
 
 ## ⚙️ Compile Source Code
