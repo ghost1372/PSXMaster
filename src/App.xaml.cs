@@ -69,7 +69,7 @@ public partial class App : Application
     private async void InitializeApp()
     {
         var menuService = GetService<ContextMenuService>();
-        if (menuService != null)
+        if (menuService != null && RuntimeHelper.IsPackaged())
         {
             ContextMenuItem menu = new ContextMenuItem
             {
