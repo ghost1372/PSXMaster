@@ -42,12 +42,25 @@ If you encounter any issues or have feedback, please report them [here](https://
 ---
 
 ## How to Use PSXMaster?
-1.Connect your PC to the PlayStation 5 or PlayStation 4 console using an Ethernet cable and the LAN port.
-2.Run the app and go to the `Game Transfer` page.
-3.Note down the port number and IP address displayed on the "Game Transfer" page.
+1.On your console, start downloading any game you want, then immediately pause the download. (a few megabytes should be downloaded)
+
+2.Connect your PC to the PlayStation 5 or PlayStation 4 console using an Ethernet/LAN cable.
+
+3.Run the app and go to the `Game Transfer` page.
+
+4.Note down the port number and IP address displayed on the "Game Transfer" page.
+
+5.On your console, switch to a wired network connection. Set up a proxy server using the IP address and port number from the previous step. Also, set the primary DNS to `165.227.83.145`, then connect to the network.
+
+![image](https://github.com/user-attachments/assets/b5b7c5ef-17a2-400e-8e94-326441df5201)
+
+6.Once you resume the download on your console, the Game Transfer page in PSXMaster will display detailed information such as the download link and file name. If the corresponding game data is available in the path you’ve specified on your PC, the console will download the game directly from your PC instead of the internet.
 
 > [!TIP]
-> Full usage instructions will be available soon.
+> If you experience connection issues, go to your PC’s Network and Sharing Center and enable network sharing.
+
+![image](https://github.com/user-attachments/assets/2d83c33c-9107-42de-a2f8-417b438dcead)
+
 
 ---
 
