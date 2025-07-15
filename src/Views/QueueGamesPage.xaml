@@ -2,7 +2,6 @@
 <Page x:Class="PSXMaster.Views.QueueGamesPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:controls="using:CommunityToolkit.WinUI.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:database="using:PSXMaster.Database.Tables"
       xmlns:local="using:PSXMaster.Views"
@@ -106,30 +105,46 @@
                   Margin="0,10"
                   ItemsSource="{x:Bind ViewModel.FilteredGames, Mode=OneWay}"
                   SelectionChanged="MyListView_SelectionChanged">
-            <ListView.Header>
-                <controls:DataTable>
-                    <controls:DataColumn MinWidth="120"
-                                         CanResize="True"
-                                         Content="Game Id" />
-                    <controls:DataColumn Width="400"
-                                         CanResize="True"
-                                         Content="Title" />
-                    <controls:DataColumn CanResize="True"
-                                         Content="Link" />
-                </controls:DataTable>
-            </ListView.Header>
+            <ListView.HeaderTemplate>
+                <DataTemplate>
+                    <Grid Margin="10,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}"
+                                   Text="Game Id" />
+                        <TextBlock Grid.Column="1"
+                                   Style="{ThemeResource SubtitleTextBlockStyle}"
+                                   Text="Title" />
+                        <TextBlock Grid.Column="2"
+                                   Style="{ThemeResource SubtitleTextBlockStyle}"
+                                   Text="Link" />
+                    </Grid>
+                </DataTemplate>
+            </ListView.HeaderTemplate>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="database:QueueGames">
-                    <controls:DataRow HorizontalAlignment="Left"
-                                      ContextFlyout="{StaticResource DataTableMenuFlyout}"
-                                      RightTapped="DataRow_RightTapped">
+                    <Grid ContextFlyout="{StaticResource DataTableMenuFlyout}"
+                          RightTapped="DataRow_RightTapped">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
                         <TextBlock VerticalAlignment="Center"
+                                   Style="{ThemeResource BaseTextBlockStyle}"
                                    Text="{x:Bind GameId}" />
-                        <TextBlock VerticalAlignment="Center"
+                        <TextBlock Grid.Column="1"
+                                   VerticalAlignment="Center"
+                                   Style="{ThemeResource BaseTextBlockStyle}"
                                    Text="{x:Bind Title}" />
-                        <TextBlock VerticalAlignment="Center"
+                        <TextBlock Grid.Column="2"
+                                   VerticalAlignment="Center"
+                                   Style="{ThemeResource BaseTextBlockStyle}"
                                    Text="{x:Bind Link}" />
-                    </controls:DataRow>
+                    </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.ItemContainerStyle>
