@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Text;
-using CommunityToolkit.WinUI.Collections;
+using PSXMaster.Collection;
 using PSXMaster.Database;
 using PSXMaster.Database.Tables;
 using Windows.ApplicationModel.DataTransfer;
@@ -13,9 +13,10 @@ public partial class QueueGamesViewModel : ObservableRecipient
 
     [ObservableProperty]
     public partial ObservableCollection<QueueGames> Games { get; set; } = new ObservableCollection<QueueGames>();
-
     [ObservableProperty]
-    public partial AdvancedCollectionView GamesACV { get; set; }
+    public partial ObservableCollection<QueueGames> FilteredGames { get; set; } = new ObservableCollection<QueueGames>();
+
+    public FilteringOperation<QueueGames> FilteringOption { get; set; }
 
     [ObservableProperty]
     public partial bool IsProcessActive { get; set; }
@@ -26,38 +27,32 @@ public partial class QueueGamesViewModel : ObservableRecipient
     [RelayCommand]
     public void OnPageLoaded()
     {
+
         IsProcessActive = true;
         OnRefresh();
+
+        FilteringOption = new FilteringOperation<QueueGames>();
+        
     }
 
     [RelayCommand]
     public void OnSearchGames()
     {
-        Search();
+        FilteringOption.CustomFilter = OnFilter;
+        FilteringOption.IsEnabled = true;
+
+        var result = FilteringOption.Execute(Games).ToList();
+        FilteredGames = new(result);
     }
 
-    public void Search()
+    private bool OnFilter(QueueGames game)
     {
-        if (Games != null && Games.Any())
-        {
-            GamesACV.Filter = _ => true;
-            GamesACV.Filter = GamesFilter;
-        }
-    }
+        if (string.IsNullOrWhiteSpace(SearchQuery))
+            return true;
 
-    private bool GamesFilter(object item)
-    {
-        if (item == null)
-            return false;
-
-        var query = (QueueGames)item;
-
-        if (query == null)
-            return false;
-
-        return query.GameId.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) ||
-            query.Title.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) ||
-            query.Link.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase);
+        return (game.GameId?.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
+               (game.Title?.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
+               (game.Link?.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) ?? false);
     }
 
     [RelayCommand]
@@ -144,7 +139,7 @@ public partial class QueueGamesViewModel : ObservableRecipient
         {
             Games = new(db.QueueGames);
         }
-        GamesACV = new AdvancedCollectionView(Games, true);
+        FilteredGames = Games;
         IsProcessActive = false;
     }
 

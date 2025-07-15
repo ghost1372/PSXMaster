@@ -104,7 +104,7 @@
         <ListView x:Name="MyListView"
                   Grid.Row="2"
                   Margin="0,10"
-                  ItemsSource="{x:Bind ViewModel.GamesACV, Mode=OneWay}"
+                  ItemsSource="{x:Bind ViewModel.FilteredGames, Mode=OneWay}"
                   SelectionChanged="MyListView_SelectionChanged">
             <ListView.Header>
                 <controls:DataTable>
