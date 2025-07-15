@@ -1,4 +1,5 @@
-﻿using PSXMaster.Services;
+﻿using PSXMaster.Database;
+using PSXMaster.Services;
 
 namespace PSXMaster;
 
@@ -24,6 +25,8 @@ public partial class App : Application
     {
         Services = ConfigureServices();
         this.InitializeComponent();
+
+        DbBootstrapper.EnsureDatabaseExists();
 
         if (!Directory.Exists(Settings.LocalFileDirectory))
         {

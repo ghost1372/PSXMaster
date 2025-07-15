@@ -5,10 +5,6 @@ using PSXMaster.Database.Tables;
 namespace PSXMaster.Database;
 public partial class PSXMasterDbContext : DbContext
 {
-    public PSXMasterDbContext()
-    {
-        Database.EnsureCreated();
-    }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         string filename = Constants.DatabaseFilePath;
