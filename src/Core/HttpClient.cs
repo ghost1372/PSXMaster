@@ -410,8 +410,8 @@ public sealed partial class HttpClient : Client
     }
     private async void SendLocalFile(Socket socket)
     {
-        byte[] buffer = new byte[Settings.BufferSize];
-        int bytesRead = await Task.Run(() => _mLocalFile!.FileStream!.Read(buffer, 0, Settings.BufferSize));
+        byte[] buffer = new byte[Settings.TransferBuffer.Size];
+        int bytesRead = await Task.Run(() => _mLocalFile!.FileStream!.Read(buffer, 0, Settings.TransferBuffer.Size));
         if (bytesRead > 0)
         {
             try

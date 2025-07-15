@@ -13,16 +13,16 @@ public abstract class Client : IDisposable
 
     protected Client()
     {
-        _buffer = new byte[Settings.BufferSize];
-        _remoteBuffer = new byte[Settings.BufferSize / 2];
+        _buffer = new byte[Settings.TransferBuffer.Size];
+        _remoteBuffer = new byte[Settings.TransferBuffer.Size / 2];
         ClientSocket = null;
         _destroyer = null;
     }
 
     protected Client(Socket clientSocket, DestroyDelegate destroyer)
     {
-        _buffer = new byte[Settings.BufferSize];
-        _remoteBuffer = new byte[Settings.BufferSize / 2];
+        _buffer = new byte[Settings.TransferBuffer.Size];
+        _remoteBuffer = new byte[Settings.TransferBuffer.Size / 2];
         ClientSocket = clientSocket;
         _destroyer = destroyer;
     }

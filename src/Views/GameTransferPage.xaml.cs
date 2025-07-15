@@ -1,4 +1,5 @@
-﻿using Windows.System;
+﻿using PSXMaster.Models;
+using Windows.System;
 
 namespace PSXMaster.Views;
 
@@ -46,12 +47,6 @@ public sealed partial class GameTransferPage : Page
         }
     }
 
-    private void ComboBox_Loaded(object sender, RoutedEventArgs e)
-    {
-        var cmb = sender as ComboBox;
-        cmb.SelectedValue = Settings.BufferSize;
-    }
-
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
         base.OnNavigatedTo(e);
@@ -60,5 +55,14 @@ public sealed partial class GameTransferPage : Page
 #else
         DebugButton.Visibility = Visibility.Collapsed;
 #endif
+    }
+
+    private void ComboBox_Loaded(object sender, RoutedEventArgs e)
+    {
+        var cmb = sender as ComboBox;
+        if (cmb != null)
+        {
+            cmb.SelectedItem = cmb.Items.Where(x => ((BufferModel)x).Name.Equals(Settings.TransferBuffer.Name)).FirstOrDefault();
+        }
     }
 }

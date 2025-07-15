@@ -36,7 +36,7 @@
                           ItemsSource="{x:Bind common:AppHelper.Buffers, Mode=OneWay}"
                           Loaded="ComboBox_Loaded"
                           PlaceholderText="512"
-                          SelectedValue="{x:Bind common:AppHelper.Settings.BufferSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                          SelectedItem="{x:Bind common:AppHelper.Settings.TransferBuffer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate x:DataType="models:BufferModel">
                             <TextBlock Text="{x:Bind Name}" />

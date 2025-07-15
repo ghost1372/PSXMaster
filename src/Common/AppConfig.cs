@@ -1,13 +1,14 @@
 ﻿using Nucs.JsonSettings.Examples;
 using Nucs.JsonSettings.Modulation;
+using PSXMaster.Models;
 
 namespace PSXMaster.Common;
 
 [GenerateAutoSaveOnChange]
 public partial class AppConfig : NotifiyingJsonSettings, IVersionable
 {
-    [EnforcedVersion("1.2.0.0")]
-    public virtual Version Version { get; set; } = new Version(1, 2, 0, 0);
+    [EnforcedVersion("1.3.0.0")]
+    public virtual Version Version { get; set; } = new Version(1, 3, 0, 0);
 
     private string fileName { get; set; } = Constants.AppConfigPath;
 
@@ -22,7 +23,7 @@ public partial class AppConfig : NotifiyingJsonSettings, IVersionable
 
     private string? localFileDirectory { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "PSXMaster");
 
-    private int bufferSize { get; set; } = 2 * 1024 * 1024;
+    private BufferModel transferBuffer { get; set; } = new BufferModel { Size = 2 * 1024 * 1024, Name = "2 MB" };
 
     private string dBPath { get; set; } = Constants.DatabaseFilePath;
 }

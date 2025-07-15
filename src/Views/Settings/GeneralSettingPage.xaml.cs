@@ -1,4 +1,7 @@
-﻿namespace PSXMaster.Views;
+﻿using PSXMaster.Common;
+using PSXMaster.Models;
+
+namespace PSXMaster.Views;
 
 public sealed partial class GeneralSettingPage : Page
 {
@@ -22,7 +25,10 @@ public sealed partial class GeneralSettingPage : Page
     private void ComboBox_Loaded(object sender, RoutedEventArgs e)
     {
         var cmb = sender as ComboBox;
-        cmb.SelectedValue = Settings.BufferSize;
+        if (cmb != null)
+        {
+            cmb.SelectedItem = cmb.Items.Where(x=> ((BufferModel)x).Name.Equals(Settings.TransferBuffer.Name)).FirstOrDefault();
+        }
     }
 }
 
