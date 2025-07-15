@@ -17,4 +17,14 @@ public sealed partial class GameDetailsPage : Page
     {
         webView2.Source = source;
     }
+
+    private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+    {
+        ViewModel.QuerySubmittedCommand.Execute(null);
+    }
+
+    private void webView2_NavigationCompleted(WebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs args)
+    {
+        ViewModel.NavigationCompletedCommand.Execute(sender);
+    }
 }

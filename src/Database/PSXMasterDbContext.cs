@@ -3,7 +3,7 @@ using PSXMaster.Common;
 using PSXMaster.Database.Tables;
 
 namespace PSXMaster.Database;
-public class PSXMasterDbContext : DbContext
+public partial class PSXMasterDbContext : DbContext
 {
     public PSXMasterDbContext()
     {

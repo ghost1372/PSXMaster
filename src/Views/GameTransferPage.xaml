@@ -32,13 +32,17 @@
                            PlaceholderText="8080"
                            Value="{x:Bind ViewModel.Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <ComboBox MinWidth="170"
-                          DisplayMemberPath="Name"
                           Header="Buffer Size"
                           ItemsSource="{x:Bind common:AppHelper.Buffers, Mode=OneWay}"
                           Loaded="ComboBox_Loaded"
                           PlaceholderText="512"
-                          SelectedValue="{x:Bind common:AppHelper.Settings.BufferSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          SelectedValuePath="Size" />
+                          SelectedValue="{x:Bind common:AppHelper.Settings.BufferSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="models:BufferModel">
+                            <TextBlock Text="{x:Bind Name}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
                 <Button Width="170"
                         VerticalAlignment="Bottom"
                         Command="{x:Bind ViewModel.ClearLogCommand}"

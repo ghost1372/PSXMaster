@@ -5,9 +5,9 @@
       xmlns:controls="using:CommunityToolkit.WinUI.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:database="using:PSXMaster.Database.Tables"
-      xmlns:i="using:Microsoft.Xaml.Interactivity"
       xmlns:local="using:PSXMaster.Views"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      Loaded="Page_Loaded"
       mc:Ignorable="d">
     <Page.Resources>
         <MenuFlyout x:Key="DataTableMenuFlyout">
@@ -45,13 +45,7 @@
             </MenuFlyoutItem>
         </MenuFlyout>
     </Page.Resources>
-    <i:Interaction.Behaviors>
-        <i:EventTriggerBehavior EventName="Loaded">
-            <i:EventTriggerBehavior.Actions>
-                <i:InvokeCommandAction Command="{x:Bind ViewModel.PageLoadedCommand}" />
-            </i:EventTriggerBehavior.Actions>
-        </i:EventTriggerBehavior>
-    </i:Interaction.Behaviors>
+
     <Grid Padding="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -104,15 +98,8 @@
         <AutoSuggestBox Grid.Row="1"
                         PlaceholderText="Search Games..."
                         QueryIcon="Find"
-                        Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-            <i:Interaction.Behaviors>
-                <i:EventTriggerBehavior EventName="TextChanged">
-                    <i:EventTriggerBehavior.Actions>
-                        <i:InvokeCommandAction Command="{x:Bind ViewModel.SearchGamesCommand}" />
-                    </i:EventTriggerBehavior.Actions>
-                </i:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-        </AutoSuggestBox>
+                        Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        TextChanged="AutoSuggestBox_TextChanged" />
 
         <ListView x:Name="MyListView"
                   Grid.Row="2"

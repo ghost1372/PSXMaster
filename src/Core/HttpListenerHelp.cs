@@ -3,7 +3,7 @@ using System.Net.Sockets;
 
 namespace PSXMaster.Core;
 
-public sealed class HttpListenerHelp : Listener
+public sealed partial class HttpListenerHelp : Listener
 {
     public UpdataUrlLog? UpdataUrlLog;
 

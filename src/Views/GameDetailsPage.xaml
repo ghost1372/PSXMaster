@@ -4,7 +4,6 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:dev="using:DevWinUI"
-      xmlns:i="using:Microsoft.Xaml.Interactivity"
       xmlns:local="using:PSXMaster.Views"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d">
@@ -20,15 +19,8 @@
         <AutoSuggestBox Margin="10"
                         PlaceholderText="Search for CUSA00341 Or PPSA05684"
                         QueryIcon="Find"
-                        Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-            <i:Interaction.Behaviors>
-                <i:EventTriggerBehavior EventName="QuerySubmitted">
-                    <i:EventTriggerBehavior.Actions>
-                        <i:InvokeCommandAction Command="{x:Bind ViewModel.QuerySubmittedCommand}" />
-                    </i:EventTriggerBehavior.Actions>
-                </i:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-        </AutoSuggestBox>
+                        QuerySubmitted="AutoSuggestBox_QuerySubmitted"
+                        Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         <StackPanel Grid.Row="1"
                     Margin="10,0"
                     Orientation="Horizontal"
@@ -161,15 +153,7 @@
                  Message="{x:Bind ViewModel.InfoBarMessage, Mode=OneWay}"
                  Severity="{x:Bind ViewModel.InfoBarSeverity, Mode=OneWay}" />
         <WebView2 x:Name="webView2"
-                  Grid.Row="3">
-            <i:Interaction.Behaviors>
-                <i:EventTriggerBehavior EventName="NavigationCompleted">
-                    <i:EventTriggerBehavior.Actions>
-                        <i:InvokeCommandAction Command="{x:Bind ViewModel.NavigationCompletedCommand}"
-                                               CommandParameter="{Binding ElementName=webView2}" />
-                    </i:EventTriggerBehavior.Actions>
-                </i:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-        </WebView2>
+                  Grid.Row="3"
+                  NavigationCompleted="webView2_NavigationCompleted" />
     </Grid>
 </Page>

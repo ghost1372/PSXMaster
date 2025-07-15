@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PSXMaster.Core;
 
-public sealed class HttpClient : Client
+public sealed partial class HttpClient : Client
 {
     private readonly UpdataUrlLog _updataUrlLog;
     private string? _mHttpPost;

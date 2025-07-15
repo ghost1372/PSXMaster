@@ -7,6 +7,7 @@
       xmlns:dev="using:DevWinUI"
       xmlns:local="using:PSXMaster"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:model="using:PSXMaster.Models"
       xmlns:views="using:PSXMaster.Views"
       dev:BreadcrumbNavigator.IsHeaderVisible="True"
       mc:Ignorable="d">
@@ -82,12 +83,16 @@
                               Header="Buffer Size"
                               HeaderIcon="{dev:FontIcon GlyphName=SpecialEffectSize}">
                 <ComboBox MinWidth="170"
-                          DisplayMemberPath="Name"
                           ItemsSource="{x:Bind common:AppHelper.Buffers, Mode=OneWay}"
                           Loaded="ComboBox_Loaded"
                           PlaceholderText="512"
-                          SelectedValue="{x:Bind common:AppHelper.Settings.BufferSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          SelectedValuePath="Size" />
+                          SelectedValue="{x:Bind common:AppHelper.Settings.BufferSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="model:BufferModel">
+                            <TextBlock Text="{x:Bind Name}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
             </dev:SettingsCard>
             <dev:SettingsExpander Description="By activating this option, if an error or crash occurs, its information will be saved in a file called Log{YYYYMMDD}.txt"
                                   Header="Developer Mode (Restart Required)"

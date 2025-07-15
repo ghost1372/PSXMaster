@@ -39,4 +39,14 @@ public sealed partial class QueueGamesPage : Page
             }
         }
     }
+
+    private void Page_Loaded(object sender, RoutedEventArgs e)
+    {
+        ViewModel.PageLoadedCommand.Execute(null);
+    }
+
+    private void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+    {
+        ViewModel.SearchGamesCommand.Execute(null);
+    }
 }
