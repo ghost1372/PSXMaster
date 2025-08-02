@@ -30,7 +30,7 @@ public sealed partial class ItemUserControl : UserControl
     {
         if (string.IsNullOrEmpty(Game.TitleID) || string.IsNullOrEmpty(Game.UrlLastPart))
         {
-            MessageBox.Show(WindowNative.GetWindowHandle(App.MainWindow), "GameId or Title is null or empty", MessageBoxStyle.IconError);
+            await MessageBox.ShowAsync("GameId or Title is null or empty");
             return;
         }
 
@@ -55,7 +55,7 @@ public sealed partial class ItemUserControl : UserControl
         catch (Exception ex)
         {
             Logger?.Error(ex.Message);
-            MessageBox.Show(WindowNative.GetWindowHandle(App.MainWindow), ex.Message, MessageBoxStyle.IconError);
+            await MessageBox.ShowAsync(ex.Message);
         }
     }
 
