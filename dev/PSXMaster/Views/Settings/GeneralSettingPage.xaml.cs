@@ -1,5 +1,4 @@
-﻿using PSXMaster.Common;
-using PSXMaster.Models;
+﻿using PSXMaster.Models;
 
 namespace PSXMaster.Views;
 

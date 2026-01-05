@@ -16,8 +16,7 @@
         <KeyboardAccelerator Key="Enter"
                              Invoked="OnEnterInvoked" />
     </ContentDialog.KeyboardAccelerators>
-    <Grid Width="500"
-          Padding="10">
+    <Grid Width="500" Padding="10">
         <TextBlock Text="Are you sure you want to delete selected items?" />
     </Grid>
 </ContentDialog>

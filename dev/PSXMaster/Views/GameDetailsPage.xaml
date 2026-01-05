@@ -21,11 +21,7 @@
                         QueryIcon="Find"
                         QuerySubmitted="AutoSuggestBox_QuerySubmitted"
                         Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-        <StackPanel Grid.Row="1"
-                    Margin="10,0"
-                    Orientation="Horizontal"
-                    Spacing="10"
-                    Visibility="{x:Bind ViewModel.GridVisibility, Mode=OneWay}">
+        <StackPanel Grid.Row="1" Margin="10,0" Orientation="Horizontal" Spacing="10" Visibility="{x:Bind ViewModel.GridVisibility, Mode=OneWay}">
             <TextBlock VerticalAlignment="Center"
                        Text="Show Game Background" />
             <ToggleSwitch IsOn="{x:Bind ViewModel.ShowBackground, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -35,13 +31,9 @@
                      Padding="10"
                      CornerRadius="{ThemeResource OverlayCornerRadius}"
                      Source="{x:Bind ViewModel.BackgroundURL, Mode=OneWay}"
+                     Stretch="UniformToFill"
                      Visibility="{x:Bind ViewModel.ShowBackground, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
-        <Grid Grid.Row="2"
-              Margin="10"
-              Padding="10"
-              RowSpacing="10"
-              Style="{ThemeResource GridCardPanel}"
-              Visibility="{x:Bind ViewModel.GridVisibility, Mode=OneWay}">
+        <Grid Grid.Row="2" Margin="10" Padding="10" RowSpacing="10" Style="{ThemeResource GridCardPanel}" Visibility="{x:Bind ViewModel.GridVisibility, Mode=OneWay}">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />

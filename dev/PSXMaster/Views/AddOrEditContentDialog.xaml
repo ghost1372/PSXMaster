@@ -13,9 +13,7 @@
         <KeyboardAccelerator Key="Enter"
                              Invoked="OnEnterInvoked" />
     </ContentDialog.KeyboardAccelerators>
-    <StackPanel Width="500"
-                Padding="10"
-                Spacing="10">
+    <StackPanel Width="500" Padding="10" Spacing="10">
         <TextBox Header="Game Id"
                  PlaceholderText="CUSA00341 Or PPSA05684"
                  Text="{x:Bind GameId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />

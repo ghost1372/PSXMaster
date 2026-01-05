@@ -100,10 +100,13 @@
                         <ItemContainer>
                             <Border Padding="10"
                                     Background="{ThemeResource LayerFillColorDefaultBrush}"
-                                    BorderBrush="{ThemeResource TeachingTipBorderBrush}"
+                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                                     BorderThickness="1"
                                     CornerRadius="{ThemeResource OverlayCornerRadius}"
-                                    Shadow="{ThemeResource ThemeShadow}">
+                                    Translation="0,0,32">
+                                <Border.Shadow>
+                                    <ThemeShadow />
+                                </Border.Shadow>
                                 <Border.Transitions>
                                     <TransitionCollection>
                                         <ContentThemeTransition VerticalOffset="150" />

@@ -4,7 +4,6 @@ using PSXMaster.Common;
 using PSXMaster.Database;
 using PSXMaster.Database.Tables;
 using Windows.ApplicationModel.DataTransfer;
-using WinRT.Interop;
 
 namespace PSXMaster.Views;
 public sealed partial class ItemUserControl : UserControl

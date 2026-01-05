@@ -7,9 +7,7 @@
              xmlns:local="using:PSXMaster.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d">
-    <Grid Padding="0,0,15,0"
-          ColumnSpacing="5"
-          RowSpacing="5">
+    <Grid Padding="0,0,15,0" ColumnSpacing="5" RowSpacing="5">
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
@@ -31,10 +29,7 @@
                  IsReadOnly="True"
                  PlaceholderText="URL: "
                  Text="{x:Bind Game.Link, Mode=OneWay}" />
-        <StackPanel Grid.RowSpan="3"
-                    Grid.Column="2"
-                    Margin="5,0,0,0"
-                    Spacing="5">
+        <StackPanel Grid.RowSpan="3" Grid.Column="2" Margin="5,0,0,0" Spacing="5">
             <dev:CopyButton Click="OnCopyButton"
                             Content="&#xE8C8;" />
             <dev:CopyButton Click="OnDownloadButton"
@@ -58,10 +53,7 @@
                  IsReadOnly="True"
                  PlaceholderText="File Path "
                  Text="{x:Bind Game.FilePath, Mode=OneWay}" />
-        <StackPanel Grid.Row="2"
-                    Grid.ColumnSpan="2"
-                    Orientation="Horizontal"
-                    Spacing="10">
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="10">
             <dev:Shield Click="Shield_Click"
                         PointerEntered="Shield_PointerEntered"
                         PointerExited="Shield_PointerExited"

@@ -126,8 +126,7 @@
             </ListView.HeaderTemplate>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="database:QueueGames">
-                    <Grid ContextFlyout="{StaticResource DataTableMenuFlyout}"
-                          RightTapped="DataRow_RightTapped">
+                    <Grid ContextFlyout="{StaticResource DataTableMenuFlyout}" RightTapped="DataRow_RightTapped">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
@@ -148,8 +147,7 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.ItemContainerStyle>
-                <Style BasedOn="{StaticResource DefaultListViewItemStyle}"
-                       TargetType="ListViewItem">
+                <Style TargetType="ListViewItem" BasedOn="{StaticResource DefaultListViewItemStyle}">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 </Style>
             </ListView.ItemContainerStyle>

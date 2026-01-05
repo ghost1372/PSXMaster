@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using PSXMaster.Database.Tables;
+﻿using PSXMaster.Database.Tables;
 
 namespace PSXMaster.Views;
 

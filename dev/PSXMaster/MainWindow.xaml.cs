@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace PSXMaster;
+﻿namespace PSXMaster;
 
 public sealed partial class MainWindow : Window
 {
