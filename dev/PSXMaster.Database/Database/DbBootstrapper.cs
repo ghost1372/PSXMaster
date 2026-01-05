@@ -1,20 +1,14 @@
-﻿using Microsoft.Data.Sqlite;
-using PSXMaster.Common;
+﻿using System.IO;
+using Microsoft.Data.Sqlite;
 
 namespace PSXMaster.Database;
 public static partial class DbBootstrapper
 {
-    public static void EnsureDatabaseExists()
+    public static void EnsureDatabaseExists(string databaseFilePath)
     {
-        string filename = Constants.DatabaseFilePath;
-        if (!string.IsNullOrEmpty(Settings.DBPath))
-        {
-            filename = $"{Settings.DBPath}";
-        }
+        bool isNew = !File.Exists(databaseFilePath);
 
-        bool isNew = !File.Exists(filename);
-
-        using var connection = new SqliteConnection($"Data Source={filename}");
+        using var connection = new SqliteConnection($"Data Source={databaseFilePath}");
         connection.Open();
 
         var command = connection.CreateCommand();

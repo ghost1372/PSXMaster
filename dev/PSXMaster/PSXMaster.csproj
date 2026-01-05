@@ -19,7 +19,7 @@
 		<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 		<WindowsPackageType>MSIX</WindowsPackageType>
 		<ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
-		<Version>1.3.0</Version>
+		<Version>1.4.0</Version>
 
 		<NoWarn>CS0618;CS8632;WMC1506;WMC1500;NU1903;NU1902</NoWarn>
 		<!--Remove git hash from assembly informational version in .NET >= 8, Example: false = 1.0.0, true = 1.0.0+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-->
@@ -77,7 +77,6 @@
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.1" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.1" />
 		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3650.58" />
 		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
@@ -90,6 +89,9 @@
 		<PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
 		<PackageReference Include="DevWinUI" Version="9.9.2" />
 		<PackageReference Include="DevWinUI.Controls" Version="9.9.2" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\PSXMaster.Database\PSXMaster.Database.csproj" />
 	</ItemGroup>
 
 	<!-- 

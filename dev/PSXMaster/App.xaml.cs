@@ -1,4 +1,5 @@
-﻿using PSXMaster.Database;
+﻿using PSXMaster.Common;
+using PSXMaster.Database;
 using PSXMaster.Services;
 
 namespace PSXMaster;
@@ -26,8 +27,6 @@ public partial class App : Application
         Services = ConfigureServices();
         this.InitializeComponent();
 
-        DbBootstrapper.EnsureDatabaseExists();
-
         if (!Directory.Exists(Settings.LocalFileDirectory))
         {
             Directory.CreateDirectory(Settings.LocalFileDirectory);
@@ -54,6 +53,16 @@ public partial class App : Application
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
         MainWindow = new MainWindow();
+
+        string filename = Constants.DatabaseFilePath;
+        if (!string.IsNullOrEmpty(Settings.DBPath))
+        {
+            filename = $"{Settings.DBPath}";
+        }
+
+        DbBootstrapper.EnsureDatabaseExists(filename);
+
+        PSXMasterDbContext.DatabasePath = filename;
 
         if (ThemeService != null)
         {

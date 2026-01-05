@@ -1,4 +1,5 @@
-﻿using PSXMaster.Database;
+﻿using PSXMaster.Common;
+using PSXMaster.Database;
 using PSXMaster.Database.Tables;
 
 namespace PSXMaster.Views;
@@ -78,7 +79,7 @@ public sealed partial class AddOrEditContentDialog : ContentDialog
             {
                 using (var db = new PSXMasterDbContext())
                 {
-                    if (!db.QueueGames.Any(x => x.GameId.ToLower() == this.GameId.ToLower() && x.Title.ToLower() == this.GameTitle.ToLower()))
+                    if (!await Queries.GetGameByIdAndTitleQueryAsync(db, this.GameId, this.GameTitle).AnyAsync())
                     {
                         var game = new QueueGames
                         {
@@ -101,7 +102,7 @@ public sealed partial class AddOrEditContentDialog : ContentDialog
             {
                 using (var db = new PSXMasterDbContext())
                 {
-                    var game = await db.QueueGames.FindAsync(baseItemId);
+                    var game = await Queries.GetGameByIdQueryAsync(db, baseItemId).FirstOrDefaultAsync();
                     if (game != null)
                     {
                         game.Title = this.GameTitle;

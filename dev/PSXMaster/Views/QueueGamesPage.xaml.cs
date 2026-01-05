@@ -1,4 +1,5 @@
-﻿using PSXMaster.Database.Tables;
+﻿using System.Threading.Tasks;
+using PSXMaster.Database.Tables;
 
 namespace PSXMaster.Views;
 
@@ -40,11 +41,10 @@ public sealed partial class QueueGamesPage : Page
         }
     }
 
-    private void Page_Loaded(object sender, RoutedEventArgs e)
+    private async void Page_Loaded(object sender, RoutedEventArgs e)
     {
-        ViewModel.PageLoadedCommand.Execute(null);
+        await ViewModel.OnPageLoaded();
     }
-
     private void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
     {
         ViewModel.SearchGamesCommand.Execute(null);

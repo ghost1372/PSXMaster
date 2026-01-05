@@ -8,7 +8,8 @@
     <File Path=".editorconfig" />
     <File Path=".github/workflows/dotnet-release.yml" />
   </Folder>
-  <Project Path="src/PSXMaster.csproj">
+  <Project Path="dev/PSXMaster.Database/PSXMaster.Database.csproj" Id="f1d98fd8-7706-42b5-b015-17554122a672" />
+  <Project Path="dev/PSXMaster/PSXMaster.csproj">
     <Platform Solution="*|ARM64" Project="ARM64" />
     <Platform Solution="*|x64" Project="x64" />
     <Platform Solution="*|x86" Project="x86" />

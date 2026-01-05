@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Text;
+using System.Threading.Tasks;
 using PSXMaster.Collection;
+using PSXMaster.Common;
 using PSXMaster.Database;
 using PSXMaster.Database.Tables;
 using Windows.ApplicationModel.DataTransfer;
@@ -24,12 +26,11 @@ public partial class QueueGamesViewModel : ObservableRecipient
     [ObservableProperty]
     public partial string SearchQuery { get; set; }
 
-    [RelayCommand]
-    public void OnPageLoaded()
+    public async Task OnPageLoaded()
     {
 
         IsProcessActive = true;
-        OnRefresh();
+        await OnRefresh();
 
         FilteringOption = new FilteringOperation<QueueGames>();
         
@@ -92,7 +93,7 @@ public partial class QueueGamesViewModel : ObservableRecipient
         var result = await dialog.ShowAsync();
         if (result == ContentDialogResult.Primary)
         {
-            OnRefresh();
+            await OnRefresh();
         }
     }
 
@@ -107,7 +108,7 @@ public partial class QueueGamesViewModel : ObservableRecipient
         var result = await dialog.ShowAsync();
         if (result == ContentDialogResult.Primary)
         {
-            OnRefresh();
+           await OnRefresh();
         }
     }
 
@@ -128,16 +129,16 @@ public partial class QueueGamesViewModel : ObservableRecipient
         var result = await dialog.ShowAsync();
         if (result == ContentDialogResult.Primary)
         {
-            OnRefresh();
+            await OnRefresh();
         }
     }
 
     [RelayCommand]
-    private void OnRefresh()
+    private async Task OnRefresh()
     {
         using (var db = new PSXMasterDbContext())
         {
-            Games = new(db.QueueGames);
+            Games = new(await Queries.GetAllGamesQueryAsync(db).ToListAsync());
         }
         FilteredGames = Games;
         IsProcessActive = false;

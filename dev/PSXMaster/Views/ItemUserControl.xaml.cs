@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Microsoft.UI.Input;
+using PSXMaster.Common;
 using PSXMaster.Database;
 using PSXMaster.Database.Tables;
 using Windows.ApplicationModel.DataTransfer;
@@ -38,7 +39,7 @@ public sealed partial class ItemUserControl : UserControl
         {
             using (var db = new PSXMasterDbContext())
             {
-                if (!db.QueueGames.Any(x => x.GameId.ToLower() == Game.TitleID.ToLower() && x.Title.ToLower() == Game.UrlLastPart.ToLower()))
+                if (!await Queries.GetGameByIdAndTitleQueryAsync(db, Game.TitleID, Game.UrlLastPart).AnyAsync())
                 {
                     var game = new QueueGames
                     {

@@ -1,4 +1,5 @@
 ﻿
+using PSXMaster.Common;
 using PSXMaster.Database;
 
 namespace PSXMaster.Views;
@@ -28,7 +29,7 @@ public sealed partial class DeleteGameContentDialog : ContentDialog
             {
                 foreach (var item in _selectedItems)
                 {
-                    var delete = await db.QueueGames.FindAsync(item);
+                    var delete = await Queries.GetGameByIdQueryAsync(db, item).FirstOrDefaultAsync();
                     if (delete != null)
                     {
                         db.QueueGames.Remove(delete);
