@@ -1,4 +1,6 @@
-﻿namespace PSXMaster;
+﻿using System.Threading.Tasks;
+
+namespace PSXMaster;
 
 public sealed partial class MainWindow : Window
 {
@@ -21,8 +23,8 @@ public sealed partial class MainWindow : Window
         }
     }
 
-    private void ThemeButton_Click(object sender, RoutedEventArgs e)
+    private async void ThemeButton_Click(object sender, RoutedEventArgs e)
     {
-        ThemeService.ChangeThemeWithoutSave(App.MainWindow);
+        await App.Current.ThemeService.SetElementThemeWithoutSaveAsync();
     }
 }

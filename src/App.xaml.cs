@@ -44,7 +44,6 @@ public partial class App : Application
         services.AddTransient<GameDetailsViewModel>();
         services.AddTransient<GameTransferViewModel>();
         services.AddTransient<QueueGamesViewModel>();
-        services.AddSingleton<ContextMenuService>();
         services.AddTransient<GeneralSettingViewModel>();
         services.AddTransient<AppUpdateSettingViewModel>();
         services.AddTransient<AboutUsSettingViewModel>();
@@ -58,11 +57,18 @@ public partial class App : Application
 
         if (ThemeService != null)
         {
-            ThemeService.AutoInitialize(MainWindow);
+            ThemeService.Initialize(MainWindow);
         }
 
+#if DEBUG
+        ProcessInfoHelper.IsDebug = true;
+#else
+        ProcessInfoHelper.IsDebug = false;
+#endif
         MainWindow.Title = MainWindow.AppWindow.Title = ProcessInfoHelper.ProductNameAndVersion;
+
         MainWindow.AppWindow.SetIcon("Assets/AppIcon.ico");
+        MainWindow.AppWindow.SetTaskbarIcon("Assets/AppIcon.ico");
 
         MainWindow.Activate();
 
@@ -71,26 +77,6 @@ public partial class App : Application
 
     private async void InitializeApp()
     {
-        var menuService = GetService<ContextMenuService>();
-        if (menuService != null && RuntimeHelper.IsPackaged())
-        {
-            ContextMenuItem menu = new ContextMenuItem
-            {
-                Title = "Open PSXMaster Here",
-                Param = @"""{path}""",
-                AcceptFileFlag = (int)FileMatchFlagEnum.ExtList,
-                AcceptDirectoryFlag = (int)(DirectoryMatchFlagEnum.Directory | DirectoryMatchFlagEnum.Background | DirectoryMatchFlagEnum.Desktop),
-                AcceptMultipleFilesFlag = (int)FilesMatchFlagEnum.Each,
-                AcceptExts = ".pkg|.pup",
-                Index = 0,
-                Enabled = true,
-                Icon = ProcessInfoHelper.GetFileVersionInfo().FileName,
-                Exe = "PSXMaster.exe"
-            };
-
-            await menuService.SaveAsync(menu);
-        }
-
         if (Settings.UseDeveloperMode)
         {
             ConfigureLogger();

@@ -12,7 +12,7 @@ public sealed partial class DeleteGameContentDialog : ContentDialog
         this.InitializeComponent();
 
         var service = App.GetService<IThemeService>();
-        RequestedTheme = service.GetElementTheme();
+        RequestedTheme = service.ElementTheme;
     }
 
     private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)

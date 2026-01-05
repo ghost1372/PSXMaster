@@ -41,7 +41,7 @@ public sealed partial class AddOrEditContentDialog : ContentDialog
 
         this._dialogType = dialogType;
         var service = App.GetService<IThemeService>();
-        RequestedTheme = service.GetElementTheme();
+        RequestedTheme = service.ElementTheme;
         if (dialogType == DialogType.Add)
         {
             Title = "Add New Game";

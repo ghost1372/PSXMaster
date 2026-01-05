@@ -9,11 +9,9 @@
       mc:Ignorable="d">
     <dev:MainLandingPage Foreground="White"
                          HeaderImage="{ThemeResource HeaderCover}"
-                         HeaderOverlayImage="{ThemeResource HeaderCover}"
                          HeaderSubtitleText="{x:Bind dev:ProcessInfoHelper.Version}"
                          HeaderText="{x:Bind dev:ProcessInfoHelper.ProductName}"
                          JsonNavigationService="{x:Bind local:App.Current.NavService}"
-                         NewGroupText=""
-                         UseFullScreenHeaderImage="True" />
+                         NewGroupText="" />
 </Page>
 

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Microsoft.Windows.Storage.Pickers;
 
 namespace PSXMaster.ViewModels;
 public partial class GeneralSettingViewModel : ObservableObject
@@ -12,7 +13,7 @@ public partial class GeneralSettingViewModel : ObservableObject
     [RelayCommand]
     public async Task OnChooseLocalFileFolderPathAsync()
     {
-        var picker = new FolderPicker(App.MainWindow);
+        var picker = new FolderPicker(App.MainWindow.AppWindow.Id);
         var result = await picker.PickSingleFolderAsync();
         if (result is not null)
         {
@@ -30,9 +31,8 @@ public partial class GeneralSettingViewModel : ObservableObject
     [RelayCommand]
     public async Task OnChooseDatabasePathAsync()
     {
-        var picker = new FilePicker(App.MainWindow);
-        picker.FileTypeChoices.Add("Database", new List<string> { ".db" });
-        picker.DefaultFileExtension = "Database";
+        var picker = new FileOpenPicker(App.MainWindow.AppWindow.Id);
+        picker.FileTypeFilter.Add(".db");
         var result = await picker.PickSingleFileAsync();
         if (result is not null)
         {

@@ -1,4 +1,5 @@
-﻿using PSXMaster.Models;
+﻿using Microsoft.Windows.Storage.Pickers;
+using PSXMaster.Models;
 using Windows.System;
 
 namespace PSXMaster.Views;
@@ -38,7 +39,7 @@ public sealed partial class GameTransferPage : Page
 
     private async void BtnChangeDirectory_Click(object sender, RoutedEventArgs e)
     {
-        var picker = new FolderPicker(App.MainWindow);
+        var picker = new FolderPicker(App.MainWindow.AppWindow.Id);
         var result = await picker.PickSingleFolderAsync();
         if (result != null)
         {
