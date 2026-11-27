@@ -4,7 +4,8 @@
     <TargetFramework>net11.0-windows</TargetFramework>
     <Nullable>disable</Nullable>
     <InterceptorsNamespaces>$(InterceptorsNamespaces);Microsoft.EntityFrameworkCore.GeneratedInterceptors</InterceptorsNamespaces>
-
+    <EFScaffoldModelStage>none</EFScaffoldModelStage>
+    <EFPrecompileQueriesStage>none</EFPrecompileQueriesStage>
   </PropertyGroup>
 
   <ItemGroup>
