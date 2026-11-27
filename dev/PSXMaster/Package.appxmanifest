@@ -13,15 +13,15 @@
   IgnorableNamespaces="uap rescap">
 
 	<Identity
-	  Name="02573dad-0d00-4d50-b3ec-13fec914695f"
-	  Publisher="CN=Mahdi"
-	  Version="1.5.0.0"/>
+	  Name="34768MahdiHosseini.PSXMaster"
+	  Publisher="CN=EBE7C7BF-0B02-4AC9-AAE4-FC932096CBF0"
+	  Version="0.0.1.0"/>
 
-	<mp:PhoneIdentity PhoneProductId="02573dad-0d00-4d50-b3ec-13fec914695f" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+	<mp:PhoneIdentity PhoneProductId="caf9b1a2-38ff-4ea1-ae91-578dfbde7098" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
 	<Properties>
 		<DisplayName>PSXMaster</DisplayName>
-		<PublisherDisplayName>Mahdi</PublisherDisplayName>
+		<PublisherDisplayName>Mahdi Hosseini</PublisherDisplayName>
 		<Logo>Assets\Store\StoreLogo.png</Logo>
 	</Properties>
 
