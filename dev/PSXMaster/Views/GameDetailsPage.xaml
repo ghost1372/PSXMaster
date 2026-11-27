@@ -8,144 +8,149 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d">
 
-    <Grid>
+    <Page.Resources>
+        <Style x:Key="InfoCardStyle" TargetType="Border">
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="{ThemeResource OverlayCornerRadius}" />
+        </Style>
+
+        <Style x:Key="ChipStyle" TargetType="Border">
+            <Setter Property="Padding" Value="10,4" />
+            <Setter Property="Background" Value="{ThemeResource ControlFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{ThemeResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="14" />
+        </Style>
+
+        <Style x:Key="CardLabelStyle" BasedOn="{StaticResource CaptionTextBlockStyle}" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}" />
+        </Style>
+
+        <Style x:Key="CardValueStyle" BasedOn="{StaticResource SubtitleTextBlockStyle}" TargetType="TextBlock">
+            <Setter Property="IsTextSelectionEnabled" Value="True" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+    </Page.Resources>
+
+    <Grid Padding="16,10,16,16" RowSpacing="12">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <AutoSuggestBox Margin="10"
-                        PlaceholderText="Search for CUSA00341 Or PPSA05684"
-                        QueryIcon="Find"
-                        QuerySubmitted="AutoSuggestBox_QuerySubmitted"
-                        Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-        <StackPanel Grid.Row="1" Margin="10,0" Orientation="Horizontal" Spacing="10" Visibility="{x:Bind ViewModel.GridVisibility, Mode=OneWay}">
-            <TextBlock VerticalAlignment="Center"
-                       Text="Show Game Background" />
-            <ToggleSwitch IsOn="{x:Bind ViewModel.ShowBackground, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-        </StackPanel>
-        <dev:ImageEx Grid.Row="2"
-                     Margin="10"
-                     Padding="10"
-                     CornerRadius="{ThemeResource OverlayCornerRadius}"
-                     Source="{x:Bind ViewModel.BackgroundURL, Mode=OneWay}"
-                     Stretch="UniformToFill"
-                     Visibility="{x:Bind ViewModel.ShowBackground, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
-        <Grid Grid.Row="2" Margin="10" Padding="10" RowSpacing="10" Style="{ThemeResource GridCardPanel}" Visibility="{x:Bind ViewModel.GridVisibility, Mode=OneWay}">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
+        <!--  Search + background toggle  -->
+        <Grid ColumnSpacing="16">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0"
-                       FontSize="28"
-                       Style="{ThemeResource TitleLargeTextBlockStyle}"
-                       Text="Update Date " />
-            <TextBlock Grid.Row="1"
-                       FontSize="28"
-                       Style="{ThemeResource TitleLargeTextBlockStyle}"
-                       Text="Date Added " />
-            <TextBlock Grid.Row="2"
-                       FontSize="28"
-                       Style="{ThemeResource TitleLargeTextBlockStyle}"
-                       Text="Title " />
-            <TextBlock Grid.Row="3"
-                       FontSize="28"
-                       Style="{ThemeResource TitleLargeTextBlockStyle}"
-                       Text="Title Id " />
-            <TextBlock Grid.Row="4"
-                       FontSize="28"
-                       Style="{ThemeResource TitleLargeTextBlockStyle}"
-                       Text="Region " />
-            <TextBlock Grid.Row="5"
-                       FontSize="28"
-                       Style="{ThemeResource TitleLargeTextBlockStyle}"
-                       Text="Patch " />
-            <TextBlock Grid.Row="6"
-                       FontSize="28"
-                       Style="{ThemeResource TitleLargeTextBlockStyle}"
-                       Text="PKG Size " />
-            <TextBlock Grid.Row="7"
-                       FontSize="28"
-                       Style="{ThemeResource TitleLargeTextBlockStyle}"
-                       Text="Required Firmware " />
+            <AutoSuggestBox HorizontalAlignment="Stretch" PlaceholderText="Search by title id, e.g. PPSA05684 or CUSA00341" QueryIcon="Find" QuerySubmitted="AutoSuggestBox_QuerySubmitted" Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-
-            <TextBlock Grid.Row="0"
-                       Grid.Column="1"
-                       FontWeight="SemiLight"
-                       IsTextSelectionEnabled="True"
-                       Style="{ThemeResource TitleTextBlockStyle}"
-                       Text="{x:Bind ViewModel.LastUpdate, Mode=OneWay}" />
-            <TextBlock Grid.Row="1"
-                       Grid.Column="1"
-                       FontWeight="SemiLight"
-                       IsTextSelectionEnabled="True"
-                       Style="{ThemeResource TitleTextBlockStyle}"
-                       Text="{x:Bind ViewModel.DateAdded, Mode=OneWay}" />
-            <TextBlock Grid.Row="2"
-                       Grid.Column="1"
-                       FontWeight="SemiLight"
-                       IsTextSelectionEnabled="True"
-                       Style="{ThemeResource TitleTextBlockStyle}"
-                       Text="{x:Bind ViewModel.Title, Mode=OneWay}" />
-            <TextBlock Grid.Row="3"
-                       Grid.Column="1"
-                       FontWeight="SemiLight"
-                       IsTextSelectionEnabled="True"
-                       Style="{ThemeResource TitleTextBlockStyle}"
-                       Text="{x:Bind ViewModel.TitleId, Mode=OneWay}" />
-            <TextBlock Grid.Row="4"
-                       Grid.Column="1"
-                       FontWeight="SemiLight"
-                       IsTextSelectionEnabled="True"
-                       Style="{ThemeResource TitleTextBlockStyle}"
-                       Text="{x:Bind ViewModel.Region, Mode=OneWay}" />
-            <TextBlock Grid.Row="5"
-                       Grid.Column="1"
-                       FontWeight="SemiLight"
-                       IsTextSelectionEnabled="True"
-                       Style="{ThemeResource TitleTextBlockStyle}"
-                       Text="{x:Bind ViewModel.Patch, Mode=OneWay}" />
-            <TextBlock Grid.Row="6"
-                       Grid.Column="1"
-                       FontWeight="SemiLight"
-                       IsTextSelectionEnabled="True"
-                       Style="{ThemeResource TitleTextBlockStyle}"
-                       Text="{x:Bind ViewModel.PKGSize, Mode=OneWay}" />
-            <TextBlock Grid.Row="7"
-                       Grid.Column="1"
-                       FontWeight="SemiLight"
-                       IsTextSelectionEnabled="True"
-                       Style="{ThemeResource TitleTextBlockStyle}"
-                       Text="{x:Bind ViewModel.RequiredFirmware, Mode=OneWay}" />
-
+            <StackPanel Grid.Column="1" VerticalAlignment="Center" Orientation="Horizontal" Spacing="8" Visibility="{x:Bind ViewModel.GridVisibility, Mode=OneWay}">
+                <TextBlock VerticalAlignment="Center" Style="{ThemeResource BodyTextBlockStyle}" Text="Background art" />
+                <ToggleSwitch MinWidth="0" IsOn="{x:Bind ViewModel.ShowBackground, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" OffContent="" OnContent="" />
+            </StackPanel>
         </Grid>
 
-        <ProgressRing Grid.Row="2"
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Center"
-                      IsActive="{x:Bind ViewModel.IsProcessActive, Mode=OneWay}" />
+        <!--  Status messages  -->
+        <InfoBar Title="{x:Bind ViewModel.InfoBarTitle, Mode=OneWay}" Grid.Row="1" IsClosable="False" IsOpen="{x:Bind ViewModel.ShowInfoBar, Mode=OneWay}" Message="{x:Bind ViewModel.InfoBarMessage, Mode=OneWay}" Severity="{x:Bind ViewModel.InfoBarSeverity, Mode=OneWay}" />
 
-        <InfoBar Title="{x:Bind ViewModel.InfoBarTitle, Mode=OneWay}"
-                 Grid.Row="3"
-                 IsOpen="{x:Bind ViewModel.ShowInfoBar, Mode=OneWay}"
-                 Message="{x:Bind ViewModel.InfoBarMessage, Mode=OneWay}"
-                 Severity="{x:Bind ViewModel.InfoBarSeverity, Mode=OneWay}" />
-        <WebView2 x:Name="webView2"
-                  Grid.Row="3"
-                  NavigationCompleted="webView2_NavigationCompleted" />
+        <!--  Details  -->
+        <ScrollViewer x:Name="DetailsScroll" Grid.Row="2" SizeChanged="DetailsScroll_SizeChanged" Visibility="{x:Bind ViewModel.GridVisibility, Mode=OneWay}">
+            <StackPanel Spacing="16">
+
+                <!--  Banner  -->
+                <!--  Rounded clip + parallax are applied in code-behind (composition)  -->
+                <Grid x:Name="CoverHost" Height="300" Background="Transparent" PointerExited="CoverHost_PointerExited" PointerMoved="CoverHost_PointerMoved" SizeChanged="CoverHost_SizeChanged" Visibility="{x:Bind ViewModel.ShowBackground, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <dev:ImageEx x:Name="CoverImage" IsHitTestVisible="False" Source="{x:Bind ViewModel.BackgroundURL, Mode=OneWay}" Stretch="UniformToFill" />
+                </Grid>
+
+                <!--  Title + chips  -->
+                <StackPanel Spacing="10">
+                    <TextBlock IsTextSelectionEnabled="True" Style="{ThemeResource TitleLargeTextBlockStyle}" Text="{x:Bind ViewModel.Title, Mode=OneWay}" TextWrapping="Wrap" />
+
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Border Style="{StaticResource ChipStyle}">
+                            <TextBlock FontFamily="Consolas" IsTextSelectionEnabled="True" Style="{ThemeResource BodyStrongTextBlockStyle}" Text="{x:Bind ViewModel.TitleId, Mode=OneWay, TargetNullValue='—'}" />
+                        </Border>
+                        <Border Style="{StaticResource ChipStyle}">
+                            <TextBlock Style="{ThemeResource BodyStrongTextBlockStyle}" Text="{x:Bind ViewModel.Region, Mode=OneWay, TargetNullValue='—'}" />
+                        </Border>
+                        <Border Style="{StaticResource ChipStyle}">
+                            <TextBlock IsTextSelectionEnabled="True" Style="{ThemeResource BodyTextBlockStyle}" Text="{x:Bind ViewModel.Patch, Mode=OneWay, TargetNullValue='No patch'}" />
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+
+                <!--  Info cards  -->
+                <Grid ColumnSpacing="12" RowSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Border Style="{StaticResource InfoCardStyle}">
+                        <StackPanel Spacing="4">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Glyph="&#xE72C;" />
+                                <TextBlock Style="{StaticResource CardLabelStyle}" Text="Last update" />
+                            </StackPanel>
+                            <TextBlock Style="{StaticResource CardValueStyle}" Text="{x:Bind ViewModel.LastUpdate, Mode=OneWay, TargetNullValue='—'}" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="1" Style="{StaticResource InfoCardStyle}">
+                        <StackPanel Spacing="4">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Glyph="&#xE787;" />
+                                <TextBlock Style="{StaticResource CardLabelStyle}" Text="Date added" />
+                            </StackPanel>
+                            <TextBlock Style="{StaticResource CardValueStyle}" Text="{x:Bind ViewModel.DateAdded, Mode=OneWay, TargetNullValue='—'}" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="1" Style="{StaticResource InfoCardStyle}">
+                        <StackPanel Spacing="4">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Glyph="&#xE896;" />
+                                <TextBlock Style="{StaticResource CardLabelStyle}" Text="PKG size" />
+                            </StackPanel>
+                            <TextBlock Style="{StaticResource CardValueStyle}" Text="{x:Bind ViewModel.PKGSize, Mode=OneWay, TargetNullValue='—'}" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource InfoCardStyle}">
+                        <StackPanel Spacing="4">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Glyph="&#xE713;" />
+                                <TextBlock Style="{StaticResource CardLabelStyle}" Text="Required firmware" />
+                            </StackPanel>
+                            <TextBlock Style="{StaticResource CardValueStyle}" Text="{x:Bind ViewModel.RequiredFirmware, Mode=OneWay, TargetNullValue='—'}" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!--  Initial hint  -->
+        <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="6" Visibility="{x:Bind local:GameDetailsPage.ShowHint(ViewModel.GridVisibility, ViewModel.IsProcessActive, ViewModel.ShowInfoBar), Mode=OneWay}">
+            <FontIcon FontSize="36" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Glyph="&#xE721;" />
+            <TextBlock HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{ThemeResource BodyStrongTextBlockStyle}" Text="Look up a game" />
+            <TextBlock HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{ThemeResource CaptionTextBlockStyle}" Text="PS5 (PPSA) and PS4 (CUSA) title ids are supported." />
+        </StackPanel>
+
+        <ProgressRing Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="{x:Bind ViewModel.IsProcessActive, Mode=OneWay}" />
+
+        <!--  Hidden browser used to read the page  -->
+        <WebView2 x:Name="webView2" Grid.Row="2" NavigationCompleted="webView2_NavigationCompleted" />
     </Grid>
 </Page>

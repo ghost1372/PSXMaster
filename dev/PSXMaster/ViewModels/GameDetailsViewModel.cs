@@ -1,7 +1,9 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text.Json;
+using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 
 namespace PSXMaster.ViewModels;
+
 public partial class GameDetailsViewModel : ObservableRecipient
 {
     [ObservableProperty]
@@ -58,25 +60,32 @@ public partial class GameDetailsViewModel : ObservableRecipient
     [ObservableProperty]
     public partial bool ShowInfoBar { get; set; }
 
+    private static readonly Regex TitleIdRegex =
+        new(@"\b(PPSA|CUSA)\d{5}\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+    private CancellationTokenSource _loadCts;
+
     [RelayCommand]
     public void OnQuerySubmitted()
     {
-        IsProcessActive = true;
-        GridVisibility = Visibility.Collapsed;
-        ShowInfo("Please wait", "", InfoBarSeverity.Informational);
-        if (!string.IsNullOrEmpty(SearchQuery) && SearchQuery.Contains("PPSA", StringComparison.OrdinalIgnoreCase))
+        // Accepts "PPSA29660" as well as pasted text like "PPSA29660: Grand Theft Auto VI"
+        var match = TitleIdRegex.Match(SearchQuery ?? string.Empty);
+        if (!match.Success)
         {
-            Source = new Uri($"https://prosperopatches.com/{SearchQuery}");
-        }
-        else if (!string.IsNullOrEmpty(SearchQuery) && SearchQuery.Contains("CUSA", StringComparison.OrdinalIgnoreCase))
-        {
-            Source = new Uri($"https://orbispatches.com/{SearchQuery}");
+            ShowInfo("Invalid title id", "Enter a title id like PPSA05684 or CUSA00341.", InfoBarSeverity.Warning);
+            return;
         }
 
-        if (GameDetailsPage.Instance != null)
-        {
-            GameDetailsPage.Instance.SetSource(Source);
-        }
+        var id = match.Value.ToUpperInvariant();
+        var host = id.StartsWith("PPSA", StringComparison.Ordinal) ? "prosperopatches.com" : "orbispatches.com";
+
+        _loadCts?.Cancel();
+        ResetDetails();
+        IsProcessActive = true;
+        ShowInfo("Please wait", $"Loading {id}...", InfoBarSeverity.Informational);
+
+        Source = new Uri($"https://{host}/{id}");
+        GameDetailsPage.Instance?.SetSource(Source);
     }
 
     public void ShowInfo(string title, string message, InfoBarSeverity severity)
@@ -87,88 +96,105 @@ public partial class GameDetailsViewModel : ObservableRecipient
         ShowInfoBar = true;
     }
 
-    [RelayCommand]
+    private void ResetDetails()
+    {
+        GridVisibility = Visibility.Collapsed;
+        Title = TitleId = LastUpdate = Region = RequiredFirmware = null;
+        DateAdded = PKGSize = Patch = BackgroundURL = null;
+    }
+
+    // AllowConcurrentExecutions: a new navigation must be able to start (and cancel the old run)
+    // while a previous run is still waiting for the page's JavaScript.
+    [RelayCommand(AllowConcurrentExecutions = true)]
     public async Task OnNavigationCompleted(WebView2 sender)
     {
+        _loadCts?.Cancel();
+        var cts = _loadCts = new CancellationTokenSource();
+        var ct = cts.Token;
+
         try
         {
-            // Execute JavaScript to get the inner HTML of the dynamic content
-            string input = await sender.ExecuteScriptAsync("document.getElementById('dynpatch').innerHTML");
-            string header = await sender.ExecuteScriptAsync("document.documentElement.outerHTML;");
+            // The patch list is filled in by JavaScript after the page has "loaded".
+            await WaitForPatchesAsync(sender, ct);
 
-            input = Regex.Unescape(input);
-            header = Regex.Unescape(header);
+            var html = await GetStringAsync(sender, "document.documentElement.outerHTML", ct);
+            var patchHtml = await GetStringAsync(sender, "document.getElementById('dynpatch')?.innerHTML ?? ''", ct);
+
+            ct.ThrowIfCancellationRequested();
+
+            if (string.IsNullOrWhiteSpace(html))
+            {
+                ShowInfo("Error", "The page returned no content.", InfoBarSeverity.Error);
+                return;
+            }
 
             var doc = new HtmlDocument();
-            doc.LoadHtml(header);
+            doc.LoadHtml(html);
 
-            var lastUpdatedNode = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'bd-badge lead')]");
-            var titleNode = doc?.DocumentNode?.SelectSingleNode("//h1[contains(@class, 'bd-title mb-0 text-white')]");
-            var regionNode = doc?.DocumentNode?.SelectSingleNode("//div[contains(@class, 'bd-badge ms-2')]");
-
-            Title = titleNode?.InnerText?.Trim();
-            TitleId = ExtractTitleId(input);
-            Patch = ExtractPatch(input);
-            PKGSize = ExtractPKGSize(input);
-            RequiredFirmware = ExtractFirmware(input);
-            DateAdded = ExtractDateAdded(input);
-            LastUpdate = lastUpdatedNode?.InnerText?.Trim();
-            Region = regionNode?.InnerText?.Trim();
-            BackgroundURL = ExtractBackgroundUrl(header);
-            IsProcessActive = false;
-
-            if (!string.IsNullOrEmpty(Title))
+            var pageTitle = Clean(doc.DocumentNode.SelectSingleNode("//title")?.InnerText);
+            if (pageTitle != null && pageTitle.Contains("Just a moment", StringComparison.OrdinalIgnoreCase))
             {
-                GridVisibility = Visibility.Visible;
+                ShowInfo("Blocked", "The site showed a Cloudflare check instead of the game page.", InfoBarSeverity.Error);
+                return;
             }
 
-            ShowInfoBar = false;
+            var titleNode = doc.DocumentNode.SelectSingleNode("//h1[contains(@class,'bd-title')]")
+                            ?? doc.DocumentNode.SelectSingleNode("//h1");
+            var regionNode = doc.DocumentNode.SelectSingleNode("//div[contains(@class,'bd-badge') and contains(@class,'ms-2')]");
+            var updatedNode = doc.DocumentNode.SelectSingleNode("//div[contains(@class,'bd-badge') and contains(@class,'lead')]");
 
-            List<string> emptyMessages = new List<string>();
+            Title = Clean(titleNode?.InnerText);
+            Region = Clean(regionNode?.InnerText);
+            LastUpdate = Clean(updatedNode?.InnerText);
+            if (LastUpdate != null && LastUpdate.Contains("Loading", StringComparison.OrdinalIgnoreCase))
+            {
+                LastUpdate = null; // the badge shows a placeholder until the patches are loaded
+            }
+            BackgroundURL = ExtractBackgroundUrl(html);
+
+            TitleId = ExtractTitleId(patchHtml) ?? TitleIdRegex.Match(SearchQuery ?? string.Empty).Value.ToUpperInvariant();
+            Patch = ExtractPatch(patchHtml);
+            PKGSize = ExtractLabelValue(patchHtml, "PKG Size");
+            RequiredFirmware = ExtractLabelValue(patchHtml, "Required Firmware");
+            DateAdded = ExtractDateAdded(patchHtml);
+
             if (string.IsNullOrEmpty(Title))
             {
-                emptyMessages.Add($"No results found for {nameof(Title)}");
+                GridVisibility = Visibility.Collapsed;
+                ShowInfo("Not found", $"No game page was found for {SearchQuery}.", InfoBarSeverity.Warning);
+                return;
             }
 
-            if (string.IsNullOrEmpty(TitleId))
+            GridVisibility = Visibility.Visible;
+
+            if (string.IsNullOrWhiteSpace(patchHtml))
             {
-                emptyMessages.Add($"No results found for {nameof(TitleId)}");
+                // Title exists but has no patch entries yet (e.g. unreleased games)
+                ShowInfo("No patches", "This title has no patch information on the site yet.", InfoBarSeverity.Informational);
+                return;
             }
 
-            if (string.IsNullOrEmpty(PKGSize))
-            {
-                emptyMessages.Add($"No results found for {nameof(PKGSize)}");
-            }
+            var missing = new List<string>();
+            if (string.IsNullOrEmpty(Patch)) missing.Add(nameof(Patch));
+            if (string.IsNullOrEmpty(PKGSize)) missing.Add(nameof(PKGSize));
+            if (string.IsNullOrEmpty(RequiredFirmware)) missing.Add(nameof(RequiredFirmware));
+            if (string.IsNullOrEmpty(DateAdded)) missing.Add(nameof(DateAdded));
+            if (string.IsNullOrEmpty(Region)) missing.Add(nameof(Region));
+            if (string.IsNullOrEmpty(LastUpdate)) missing.Add(nameof(LastUpdate));
 
-            if (string.IsNullOrEmpty(Region))
+            if (missing.Count > 0)
             {
-                emptyMessages.Add($"No results found for {nameof(Region)}");
+                ShowInfo("Warning", "No results found for: " + string.Join(", ", missing), InfoBarSeverity.Warning);
             }
-
-            if (string.IsNullOrEmpty(RequiredFirmware))
+            else
             {
-                emptyMessages.Add($"No results found for {nameof(RequiredFirmware)}");
+                ShowInfoBar = false;
             }
-
-            if (string.IsNullOrEmpty(DateAdded))
-            {
-                emptyMessages.Add($"No results found for {nameof(DateAdded)}");
-            }
-
-            if (string.IsNullOrEmpty(LastUpdate))
-            {
-                emptyMessages.Add($"No results found for {nameof(LastUpdate)}");
-            }
-
-            if (string.IsNullOrEmpty(Patch))
-            {
-                emptyMessages.Add($"No results found for {nameof(Patch)}");
-            }
-
-            if (emptyMessages.Count > 0)
-            {
-                ShowInfo("Warning", string.Join(", ", emptyMessages), InfoBarSeverity.Warning);
-            }
+        }
+        catch (OperationCanceledException)
+        {
+            // A newer search replaced this one; it owns the UI state now.
+            return;
         }
         catch (Exception ex)
         {
@@ -176,80 +202,86 @@ public partial class GameDetailsViewModel : ObservableRecipient
         }
         finally
         {
-            IsProcessActive = false;
-        }
-    }
-
-    public string ExtractBackgroundUrl(string header)
-    {
-        if (string.IsNullOrEmpty(header))
-        {
-            return null;
-        }
-
-        var urlPattern = @"background:url\((.*?)\)";
-
-        var urlMatch = Regex.Match(header, urlPattern);
-        return urlMatch.Success ? urlMatch.Groups[1].Value : string.Empty;
-    }
-    public string ExtractPKGSize(string input)
-    {
-        if (string.IsNullOrEmpty(input))
-        {
-            return null;
-        }
-
-        int sizeStart = input.IndexOf("PKG Size") + "PKG Size".Length;
-        int sizeEnd = input.IndexOf("GB", sizeStart);
-        return input?.Substring(input.IndexOf("text-end\">", sizeStart) + "text-end\">".Length, sizeEnd - (input.IndexOf("text-end\">", sizeStart) + "text-end\">".Length)) + "GB";
-    }
-    public string ExtractTitleId(string input)
-    {
-        if (string.IsNullOrEmpty(input))
-        {
-            return null;
-        }
-
-        int titleIdStart = input.IndexOf("data-titleid=\"") + "data-titleid=\"".Length;
-        int titleIdEnd = input.IndexOf("\"", titleIdStart);
-        return input?.Substring(titleIdStart, titleIdEnd - titleIdStart);
-    }
-    public string ExtractPatch(string input)
-    {
-        if (string.IsNullOrEmpty(input))
-        {
-            return null;
-        }
-
-        int patchStart = input.IndexOf("data-title=\"") + "data-title=\"".Length;
-        int patchEnd = input.IndexOf("\"", patchStart);
-        return input?.Substring(patchStart, patchEnd - patchStart);
-    }
-    public string ExtractFirmware(string input)
-    {
-        // Look for "Required Firmware" followed by its value in the next <div>
-        string pattern = """Required Firmware</div><div class="col-auto text-end">(\d{1,2}\.\d{1,2}(\.\d{1,2}){0,2})</div>""";
-        var regex = new Regex(pattern);
-        var match = regex.Match(input);
-        return match.Success ? match.Groups[1].Value : "Firmware not found";
-    }
-    public string ExtractDateAdded(string input)
-    {
-        string[] patterns = {
-            @"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}", // 2022-10-15 18:20:19
-            @"\d{4}-\d{2}-\d{2}"                     // 2022-10-15
-        };
-
-        foreach (var pattern in patterns)
-        {
-            var regex = new Regex(pattern);
-            var match = regex.Match(input);
-            if (match.Success)
+            if (ReferenceEquals(_loadCts, cts))
             {
-                return match.Value;
+                IsProcessActive = false;
             }
         }
-
-        return "Date not found";
     }
+
+    // ---- helpers -------------------------------------------------------------------------
+
+    /// <summary>Runs JS and returns the result as a plain string (null if the script returned null).</summary>
+    private static async Task<string> GetStringAsync(WebView2 webView, string script, CancellationToken ct)
+    {
+        ct.ThrowIfCancellationRequested();
+        var json = await webView.ExecuteScriptAsync(script);
+        if (string.IsNullOrEmpty(json) || json == "null")
+        {
+            return null;
+        }
+
+        // ExecuteScriptAsync returns JSON, so decode it properly instead of Regex.Unescape
+        return JsonSerializer.Deserialize<string>(json);
+    }
+
+    /// <summary>Waits (max ~15 s) until the page no longer shows "Loading patches...".</summary>
+    private static async Task WaitForPatchesAsync(WebView2 webView, CancellationToken ct)
+    {
+        const string script =
+            "document.body ? document.body.innerText.includes('Loading patches') : true";
+
+        for (var i = 0; i < 50; i++)
+        {
+            ct.ThrowIfCancellationRequested();
+            var result = await webView.ExecuteScriptAsync(script);
+            if (result == "false")
+            {
+                await Task.Delay(200, ct); // let the DOM settle
+                return;
+            }
+
+            await Task.Delay(300, ct);
+        }
+    }
+
+    private static string Clean(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return null;
+        }
+
+        return HtmlEntity.DeEntitize(text).Trim();
+    }
+
+    private static string FirstGroup(string input, string pattern, RegexOptions options = RegexOptions.None)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return null;
+        }
+
+        var match = Regex.Match(input, pattern, options | RegexOptions.IgnoreCase);
+        return match.Success ? Clean(match.Groups[1].Value) : null;
+    }
+
+    public static string ExtractBackgroundUrl(string html)
+    {
+        var url = FirstGroup(html, @"background:\s*url\(\s*['""]?(.*?)['""]?\s*\)");
+        return url;
+    }
+
+    public static string ExtractTitleId(string patchHtml) =>
+        FirstGroup(patchHtml, @"data-titleid=""([^""]+)""");
+
+    public static string ExtractPatch(string patchHtml) =>
+        FirstGroup(patchHtml, @"data-title=""([^""]+)""");
+
+    /// <summary>Reads the value that follows a label, e.g. "PKG Size" ... &lt;div class="text-end"&gt;12.3 GB&lt;/div&gt;.</summary>
+    public static string ExtractLabelValue(string patchHtml, string label) =>
+        FirstGroup(patchHtml, Regex.Escape(label) + @".*?text-end[^>]*>\s*([^<]+?)\s*<", RegexOptions.Singleline);
+
+    public static string ExtractDateAdded(string patchHtml) =>
+        FirstGroup(patchHtml, @"(\d{4}-\d{2}-\d{2}(?: \d{2}:\d{2}:\d{2})?)");
 }

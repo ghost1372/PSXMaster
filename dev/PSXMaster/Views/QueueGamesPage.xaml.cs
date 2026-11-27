@@ -6,6 +6,7 @@ public sealed partial class QueueGamesPage : Page
 {
     public QueueGamesViewModel ViewModel { get; set; }
     internal static QueueGamesPage Instance { get; set; }
+
     public QueueGamesPage()
     {
         ViewModel = App.GetService<QueueGamesViewModel>();
@@ -13,15 +14,20 @@ public sealed partial class QueueGamesPage : Page
         Instance = this;
     }
 
-    public Database.Tables.QueueGames GetSelectedItem()
+    // Used by x:Bind in the empty-state panel
+    public static Visibility ShowWhenEmpty(int count, bool isBusy)
+        => count == 0 && !isBusy ? Visibility.Visible : Visibility.Collapsed;
+
+    public QueueGames GetSelectedItem()
     {
-        return (Database.Tables.QueueGames)MyListView.SelectedItem;
+        return (QueueGames)MyListView.SelectedItem;
     }
-    public IList<Database.Tables.QueueGames> GetSelectedItems()
+
+    public IList<QueueGames> GetSelectedItems()
     {
-        var items = MyListView.SelectedItems.Cast<QueueGames>().ToList();
-        return items;
+        return MyListView.SelectedItems.Cast<QueueGames>().ToList();
     }
+
     private void MyListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         ViewModel?.NotifyCanExecuteChanged();
@@ -29,14 +35,10 @@ public sealed partial class QueueGamesPage : Page
 
     private void DataRow_RightTapped(object sender, Microsoft.UI.Xaml.Input.RightTappedRoutedEventArgs e)
     {
-        var element = e.OriginalSource as FrameworkElement;
-        if (element != null)
+        if ((e.OriginalSource as FrameworkElement)?.DataContext is QueueGames item
+            && !MyListView.SelectedItems.Contains(item)) // keep a multi-selection intact
         {
-            var item = (element.DataContext as QueueGames);
-            if (item != null)
-            {
-                MyListView.SelectedItem = item;
-            }
+            MyListView.SelectedItem = item;
         }
     }
 
@@ -44,8 +46,12 @@ public sealed partial class QueueGamesPage : Page
     {
         await ViewModel.OnPageLoaded();
     }
+
     private void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
     {
-        ViewModel.SearchGamesCommand.Execute(null);
+        if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+        {
+            ViewModel.SearchGamesCommand.Execute(null);
+        }
     }
 }

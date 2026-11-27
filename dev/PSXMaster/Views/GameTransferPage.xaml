@@ -12,101 +12,126 @@
       NavigationCacheMode="Required"
       mc:Ignorable="d">
 
-    <Grid Padding="10">
+    <Grid Padding="16,12,16,10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <StackPanel Spacing="10">
-            <dev:WrapPanel HorizontalSpacing="10"
-                           VerticalSpacing="5">
-                <ComboBox MinWidth="170"
-                          Header="IP Address"
-                          IsEditable="True"
-                          ItemsSource="{x:Bind ViewModel.AddressList, Mode=OneWay}"
-                          PlaceholderText="192.168.1.36"
-                          SelectedItem="{x:Bind ViewModel.SelectedAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <NumberBox Header="Port"
-                           Minimum="0"
-                           PlaceholderText="8080"
-                           Value="{x:Bind ViewModel.Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <ComboBox MinWidth="170"
-                          Header="Buffer Size"
-                          ItemsSource="{x:Bind common:AppHelper.Buffers, Mode=OneWay}"
-                          Loaded="ComboBox_Loaded"
-                          PlaceholderText="512"
-                          SelectedItem="{x:Bind common:AppHelper.Settings.TransferBuffer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate x:DataType="models:BufferModel">
-                            <TextBlock Text="{x:Bind Name}" />
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-                <Button Width="170"
-                        VerticalAlignment="Bottom"
-                        Command="{x:Bind ViewModel.ClearLogCommand}"
-                        Content="Clear Logs" />
-                <Button x:Name="BtnChangeDirectory"
-                        Width="170"
-                        VerticalAlignment="Bottom"
-                        Click="BtnChangeDirectory_Click">
-                    <Grid ColumnSpacing="5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <BitmapIcon Width="18"
-                                    ShowAsMonochrome="False"
-                                    UriSource="ms-appx:///Assets/Fluent/FilePicker.png" />
-                        <TextBlock Grid.Column="1"
-                                   Text="Change Directory" />
+
+        <StackPanel Spacing="12">
+
+            <!--  Connection bar  -->
+            <Border Padding="20,16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                <Grid ColumnSpacing="24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  Status  -->
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center" Orientation="Horizontal" Spacing="12">
+                        <ToggleSwitch MinWidth="0" AutomationProperties.Name="Connection" IsOn="{x:Bind ViewModel.IsConnected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" OffContent="" OnContent="" />
+                        <StackPanel VerticalAlignment="Center" Spacing="2">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Grid VerticalAlignment="Center">
+                                    <Ellipse Width="8" Height="8" Fill="{ThemeResource SystemFillColorSuccessBrush}" Visibility="{x:Bind local:GameTransferPage.ToVisibility(ViewModel.IsConnected), Mode=OneWay}" />
+                                    <Ellipse Width="8" Height="8" Fill="{ThemeResource SystemFillColorCriticalBrush}" Visibility="{x:Bind local:GameTransferPage.ToInverseVisibility(ViewModel.IsConnected), Mode=OneWay}" />
+                                </Grid>
+                                <TextBlock FontWeight="SemiBold" Text="{x:Bind local:GameTransferPage.GetStatusText(ViewModel.IsConnected), Mode=OneWay}" />
+                            </StackPanel>
+                            <TextBlock FontFamily="Cascadia Mono, Consolas" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind local:GameTransferPage.GetEndpoint(ViewModel.SelectedAddress, ViewModel.Port), Mode=OneWay}" />
+                        </StackPanel>
+                        <Rectangle Width="1" Height="40" Margin="12,0,0,0" VerticalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" />
+                    </StackPanel>
+
+                    <!--  Network settings  -->
+                    <dev:WrapPanel Grid.Column="1" VerticalAlignment="Center" HorizontalSpacing="12" VerticalSpacing="8">
+                        <ComboBox Width="190" Header="IP Address" IsEditable="True" ItemsSource="{x:Bind ViewModel.AddressList, Mode=OneWay}" PlaceholderText="192.168.1.36" SelectedItem="{x:Bind ViewModel.SelectedAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <NumberBox Width="100" Header="Port" Minimum="0" PlaceholderText="8080" SpinButtonPlacementMode="Hidden" Value="{x:Bind ViewModel.Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <ComboBox Width="120" Header="Buffer Size" ItemsSource="{x:Bind common:AppHelper.Buffers, Mode=OneWay}" Loaded="ComboBox_Loaded" PlaceholderText="512" SelectedItem="{x:Bind common:AppHelper.Settings.TransferBuffer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="models:BufferModel">
+                                    <TextBlock Text="{x:Bind Name}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </dev:WrapPanel>
+
+                    <!--  Actions  -->
+                    <StackPanel Grid.Column="2" VerticalAlignment="Center" Orientation="Horizontal" Spacing="8">
+                        <Button Command="{x:Bind ViewModel.ClearLogCommand}">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon FontSize="14" Glyph="&#xE74D;" />
+                                <TextBlock Text="Clear logs" />
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="MoreButton" Width="36" Padding="0" AutomationProperties.Name="More actions">
+                            <FontIcon FontSize="16" Glyph="&#xE712;" />
+                            <Button.Flyout>
+                                <MenuFlyout Placement="BottomEdgeAlignedRight">
+                                    <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateFakeDataCommand}" Text="Generate fake data">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE943;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                </MenuFlyout>
+                            </Button.Flyout>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!--  Working directory  -->
+            <Border Padding="12,10,16,10" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                <Grid ColumnSpacing="14">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Width="40" Height="40" VerticalAlignment="Center">
+                        <Border Background="{ThemeResource AccentFillColorDefaultBrush}" CornerRadius="10" Opacity="0.16" />
+                        <FontIcon HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Glyph="&#xE8B7;" />
                     </Grid>
-                </Button>
-                <ToggleSwitch Margin="0,0,0,-5"
-                              VerticalAlignment="Bottom"
-                              IsOn="{x:Bind ViewModel.IsConnected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              OffContent="DisConnected"
-                              OnContent="Connected" />
-                <Button x:Name="DebugButton"
-                        Width="170"
-                        VerticalAlignment="Bottom"
-                        Command="{x:Bind ViewModel.GenerateFakeDataCommand}"
-                        Content="Generate Fake Data" />
-            </dev:WrapPanel>
-            <NavigationViewItemSeparator />
-            <InfoBar x:Name="WorkingDirectoryInfo"
-                     Title="Working Directory"
-                     IsClosable="False"
-                     IsOpen="True"
-                     Message="{x:Bind common:AppHelper.Settings.LocalFileDirectory, Mode=OneWay}">
-                <InfoBar.ActionButton>
-                    <Button Click="OnLaunchFolder"
-                            Content="&#xe8a7;"
-                            FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                            Style="{ThemeResource SubtleButtonStyle}" />
-                </InfoBar.ActionButton>
-            </InfoBar>
-            <NavigationViewItemSeparator />
+
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                        <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="Working directory" />
+                        <TextBlock TextTrimming="CharacterEllipsis" ToolTipService.ToolTip="{x:Bind common:AppHelper.Settings.LocalFileDirectory, Mode=OneWay}">
+                            <Run x:Name="DirectoryParentRun" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <Run x:Name="DirectoryNameRun" FontWeight="SemiBold" />
+                        </TextBlock>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" VerticalAlignment="Center" Orientation="Horizontal" Spacing="8">
+                        <Button Click="OnLaunchFolder" Style="{ThemeResource SubtleButtonStyle}">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon FontSize="14" Glyph="&#xE8A7;" />
+                                <TextBlock Text="Open folder" />
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="BtnChangeDirectory" Click="BtnChangeDirectory_Click">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon FontSize="14" Glyph="&#xE838;" />
+                                <TextBlock Text="Change directory" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
         </StackPanel>
-        <ScrollViewer Grid.Row="1"
-                      Padding="0,10,20,0">
-            <ItemsView ItemsSource="{x:Bind ViewModel.LogList, Mode=OneWay}">
+
+        <ScrollViewer Grid.Row="1" Padding="0,12,12,0">
+            <ItemsView ItemsSource="{x:Bind ViewModel.LogList, Mode=OneWay}" SelectionMode="None">
                 <ItemsView.Layout>
                     <StackLayout Spacing="10" />
                 </ItemsView.Layout>
                 <ItemsView.ItemTemplate>
                     <DataTemplate x:DataType="models:LogModel">
-                        <ItemContainer>
-                            <Border Padding="10"
-                                    Background="{ThemeResource LayerFillColorDefaultBrush}"
-                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                    BorderThickness="1"
-                                    CornerRadius="{ThemeResource OverlayCornerRadius}"
-                                    Translation="0,0,32">
-                                <Border.Shadow>
-                                    <ThemeShadow />
-                                </Border.Shadow>
+                        <ItemContainer CornerRadius="12">
+                            <Border Padding="16" Background="{ThemeResource LayerFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
                                 <Border.Transitions>
                                     <TransitionCollection>
                                         <ContentThemeTransition VerticalOffset="150" />
@@ -119,8 +144,7 @@
                 </ItemsView.ItemTemplate>
             </ItemsView>
         </ScrollViewer>
-        <InfoBar x:Name="MainStatus"
-                 Grid.Row="2"
-                 Severity="Error" />
+
+        <InfoBar x:Name="MainStatus" Grid.Row="2" Severity="Error" />
     </Grid>
 </Page>

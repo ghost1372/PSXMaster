@@ -7,61 +7,95 @@
              xmlns:local="using:PSXMaster.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d">
-    <Grid Padding="0,0,15,0" ColumnSpacing="5" RowSpacing="5">
-        <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-        </Grid.RowDefinitions>
+
+    <Grid ColumnSpacing="16">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition />
+            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Row="0"
-                   Grid.Column="0"
-                   VerticalAlignment="Center"
-                   Text="Url" />
-        <TextBox Grid.Row="0"
-                 Grid.Column="1"
-                 AcceptsReturn="True"
-                 IsReadOnly="True"
-                 PlaceholderText="URL: "
-                 Text="{x:Bind Game.Link, Mode=OneWay}" />
-        <StackPanel Grid.RowSpan="3" Grid.Column="2" Margin="5,0,0,0" Spacing="5">
-            <dev:CopyButton Click="OnCopyButton"
-                            Content="&#xE8C8;" />
-            <dev:CopyButton Click="OnDownloadButton"
-                            Content="&#xe896;"
-                            ToolTipService.ToolTip="Download With IDM (The link will be automatically added to the download list)" />
-            <dev:CopyButton x:Name="FavButton"
-                            Click="OnFavoriteButton"
-                            ToolTipService.ToolTip="Add to Favorite List">
+
+        <!--  Console tile  -->
+        <Border Width="56" Height="56" VerticalAlignment="Center" Background="{x:Bind local:ItemUserControl.GetConsoleBrush(Game.Console), Mode=OneWay}" CornerRadius="14">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="3">
+                <FontIcon HorizontalAlignment="Center" FontSize="20" Foreground="White" Glyph="&#xE7B8;" />
+                <TextBlock HorizontalAlignment="Center" CharacterSpacing="40" FontSize="11" FontWeight="Bold" Foreground="White" Text="{x:Bind local:ItemUserControl.GetConsoleText(Game.Console), Mode=OneWay}" />
+            </StackPanel>
+        </Border>
+
+        <!--  Info  -->
+        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="8">
+
+            <TextBlock FontSize="15" FontWeight="SemiBold" Text="{x:Bind Game.UrlLastPart, Mode=OneWay}" TextTrimming="CharacterEllipsis" ToolTipService.ToolTip="{x:Bind Game.UrlLastPart, Mode=OneWay}" />
+
+            <Grid ColumnSpacing="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <FontIcon VerticalAlignment="Center" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Glyph="&#xE71B;" />
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" FontFamily="Cascadia Mono, Consolas" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind Game.Link, Mode=OneWay}" TextTrimming="CharacterEllipsis" ToolTipService.ToolTip="{x:Bind Game.Link, Mode=OneWay}" />
+                <dev:CopyButton Grid.Column="2" Click="OnCopyButton" Content="&#xE8C8;" ToolTipService.ToolTip="Copy link" />
+            </Grid>
+
+            <Grid ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!--  Status pill  -->
+                <Grid VerticalAlignment="Center">
+                    <Border Padding="10,3" Background="{ThemeResource SystemFillColorCautionBackgroundBrush}" CornerRadius="12" ToolTipService.ToolTip="The console expects this file, but it isn't in the working directory, so it can't be transferred. Download it to fix this." Visibility="{x:Bind local:ItemUserControl.MissingVisibility(Game.FilePath), Mode=OneWay}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Ellipse Width="6" Height="6" VerticalAlignment="Center" Fill="{ThemeResource SystemFillColorCautionBrush}" />
+                            <TextBlock FontSize="12" Text="File missing" />
+                        </StackPanel>
+                    </Border>
+                    <Border Padding="8,3,10,3" Background="{ThemeResource SystemFillColorSuccessBackgroundBrush}" CornerRadius="12" ToolTipService.ToolTip="This file is in the working directory and can be transferred to the console." Visibility="{x:Bind local:ItemUserControl.FoundVisibility(Game.FilePath), Mode=OneWay}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <FontIcon VerticalAlignment="Center" FontSize="10" Foreground="{ThemeResource SystemFillColorSuccessBrush}" Glyph="&#xE73E;" />
+                            <TextBlock FontSize="12" Text="Ready to transfer" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!--  Title ID (click to copy)  -->
+                <Button Grid.Column="1" MinHeight="0" Padding="8,2" VerticalAlignment="Center" AutomationProperties.Name="Copy title ID" Background="{ThemeResource ControlFillColorSecondaryBrush}" BorderThickness="0" Click="OnCopyTitleId" CornerRadius="6" PointerExited="OnTitleIdPointerExited" ToolTipService.ToolTip="Click to copy">
+                    <TextBlock FontFamily="Cascadia Mono, Consolas" FontSize="12" Text="{x:Bind Game.TitleID, Mode=OneWay}" />
+                </Button>
+
+                <!--  File path (only when the file exists)  -->
+                <TextBlock Grid.Column="2" VerticalAlignment="Center" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind Game.FilePath, Mode=OneWay}" TextTrimming="CharacterEllipsis" ToolTipService.ToolTip="{x:Bind Game.FilePath, Mode=OneWay}" Visibility="{x:Bind local:ItemUserControl.FoundVisibility(Game.FilePath), Mode=OneWay}" />
+            </Grid>
+        </StackPanel>
+
+        <!--  Actions  -->
+        <StackPanel Grid.Column="2" VerticalAlignment="Center" Orientation="Horizontal" Spacing="8">
+            <Button AutomationProperties.Name="Show in folder" Click="OnShowInFolder" ToolTipService.ToolTip="Show in folder" Visibility="{x:Bind local:ItemUserControl.FoundVisibility(Game.FilePath), Mode=OneWay}">
+                <FontIcon FontSize="16" Glyph="&#xE838;" />
+            </Button>
+            <!--  Missing file: Download is the main action  -->
+            <Button Click="OnDownloadButton" Style="{ThemeResource AccentButtonStyle}" ToolTipService.ToolTip="Download With IDM (The link will be automatically added to the download list)" Visibility="{x:Bind local:ItemUserControl.MissingVisibility(Game.FilePath), Mode=OneWay}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon FontSize="14" Glyph="&#xE896;" />
+                    <TextBlock Text="Download" />
+                </StackPanel>
+            </Button>
+            <!--  File exists: Download stays available (for example to re-download), but is secondary  -->
+            <Button Click="OnDownloadButton" ToolTipService.ToolTip="Download With IDM (The link will be automatically added to the download list)" Visibility="{x:Bind local:ItemUserControl.FoundVisibility(Game.FilePath), Mode=OneWay}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon FontSize="14" Glyph="&#xE896;" />
+                    <TextBlock Text="Download" />
+                </StackPanel>
+            </Button>
+            <dev:CopyButton x:Name="FavButton" Click="OnFavoriteButton" ToolTipService.ToolTip="Add to Favorite List">
                 <dev:CopyButton.Content>
                     <FontIcon Glyph="&#xE728;" />
                 </dev:CopyButton.Content>
             </dev:CopyButton>
-        </StackPanel>
-        <TextBlock Grid.Row="1"
-                   Grid.Column="0"
-                   VerticalAlignment="Center"
-                   Text="File Path" />
-        <TextBox Grid.Row="1"
-                 Grid.Column="1"
-                 VerticalAlignment="Top"
-                 IsReadOnly="True"
-                 PlaceholderText="File Path "
-                 Text="{x:Bind Game.FilePath, Mode=OneWay}" />
-        <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="10">
-            <dev:Shield Click="Shield_Click"
-                        PointerEntered="Shield_PointerEntered"
-                        PointerExited="Shield_PointerExited"
-                        Status="{x:Bind Game.TitleID, Mode=OneWay}"
-                        Subject="{x:Bind Game.Console, Mode=OneWay}"
-                        ToolTipService.ToolTip="Click to Copy" />
-            <dev:Shield Status="{x:Bind Game.UrlLastPart, Mode=OneWay}"
-                        Subject="FileName" />
         </StackPanel>
     </Grid>
 </UserControl>

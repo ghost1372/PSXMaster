@@ -1,11 +1,13 @@
 ﻿using System.Diagnostics;
-using Microsoft.UI.Input;
+using Microsoft.UI.Xaml.Media;
 using PSXMaster.Common;
 using PSXMaster.Database;
 using PSXMaster.Database.Tables;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.UI;
 
 namespace PSXMaster.Views;
+
 public sealed partial class ItemUserControl : UserControl
 {
     public Models.LogModel Game
@@ -22,10 +24,51 @@ public sealed partial class ItemUserControl : UserControl
         this.InitializeComponent();
     }
 
+    // ---- x:Bind helpers ----
+
+    private static bool FileExists(string? path) => !string.IsNullOrWhiteSpace(path) && File.Exists(path);
+
+    public static Visibility FoundVisibility(string? path) => FileExists(path) ? Visibility.Visible : Visibility.Collapsed;
+
+    public static Visibility MissingVisibility(string? path) => FileExists(path) ? Visibility.Collapsed : Visibility.Visible;
+
+    public static string GetConsoleText(object? console) => console?.ToString() ?? string.Empty;
+
+    public static Brush GetConsoleBrush(object? console) => GetConsoleText(console).ToUpperInvariant() switch
+    {
+        "PS5" => new SolidColorBrush(Color.FromArgb(255, 0x1D, 0x3B, 0x8F)),
+        "PS4" => new SolidColorBrush(Color.FromArgb(255, 0x0B, 0x5C, 0x7A)),
+        _ => new SolidColorBrush(Color.FromArgb(255, 0x45, 0x45, 0x45))
+    };
+
+    // ---- Handlers ----
+
     private void OnCopyButton(object sender, RoutedEventArgs e)
     {
         CopyData(Game.Link);
     }
+
+    private void OnCopyTitleId(object sender, RoutedEventArgs e)
+    {
+        CopyData(Game.TitleID);
+        ToolTipService.SetToolTip((DependencyObject)sender, "Copied!");
+    }
+
+    private void OnTitleIdPointerExited(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+    {
+        ToolTipService.SetToolTip((DependencyObject)sender, "Click to copy");
+    }
+
+    private void OnShowInFolder(object sender, RoutedEventArgs e)
+    {
+        if (!FileExists(Game.FilePath))
+        {
+            return;
+        }
+
+        Process.Start(new ProcessStartInfo("explorer.exe", $"/select,\"{Game.FilePath}\"") { UseShellExecute = true });
+    }
+
     private async void OnFavoriteButton(object sender, RoutedEventArgs e)
     {
         if (string.IsNullOrEmpty(Game.TitleID) || string.IsNullOrEmpty(Game.UrlLastPart))
@@ -71,27 +114,6 @@ public sealed partial class ItemUserControl : UserControl
         {
             Process.Start(idm32, $"/d {Game.Link} /a");
         }
-    }
-
-    private void Shield_PointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
-    {
-        var element = sender as Shield;
-        ToolTipService.SetToolTip(element, "Click to Copy");
-        GeneralHelper.ChangeCursor(element, InputSystemCursor.Create(InputSystemCursorShape.Hand));
-    }
-
-    private void Shield_PointerExited(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
-    {
-        var element = sender as Shield;
-        GeneralHelper.ChangeCursor(element, InputSystemCursor.Create(InputSystemCursorShape.Arrow));
-    }
-
-    private void Shield_Click(object sender, RoutedEventArgs e)
-    {
-        var element = sender as Shield;
-        CopyData(element?.Status?.ToString());
-        GeneralHelper.ChangeCursor(element, InputSystemCursor.Create(InputSystemCursorShape.Arrow));
-        ToolTipService.SetToolTip(element, "Copied!");
     }
 
     public void CopyData(string data)

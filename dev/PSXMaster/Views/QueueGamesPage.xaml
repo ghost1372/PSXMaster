@@ -8,154 +8,125 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       Loaded="Page_Loaded"
       mc:Ignorable="d">
+
     <Page.Resources>
+        <!--  Column widths shared by header and rows so they always line up  -->
+        <GridLength x:Key="GameIdColumnWidth">130</GridLength>
+
         <MenuFlyout x:Key="DataTableMenuFlyout">
-            <MenuFlyoutItem Command="{x:Bind ViewModel.CopySelectedItemCommand, Mode=OneWay}"
-                            CommandParameter="GameId"
-                            Text="Copy Game Id">
+            <MenuFlyoutItem Command="{x:Bind ViewModel.CopySelectedItemCommand, Mode=OneWay}" CommandParameter="GameId" Text="Copy Game Id">
                 <MenuFlyoutItem.Icon>
-                    <SymbolIcon Symbol="Copy" />
+                    <FontIcon Glyph="&#xE8C8;" />
                 </MenuFlyoutItem.Icon>
                 <MenuFlyoutItem.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="C"
-                                         Modifiers="Control" />
+                    <KeyboardAccelerator Key="C" Modifiers="Control" />
                 </MenuFlyoutItem.KeyboardAccelerators>
             </MenuFlyoutItem>
-            <MenuFlyoutItem Command="{x:Bind ViewModel.CopySelectedItemCommand, Mode=OneWay}"
-                            CommandParameter="Title"
-                            Text="Copy Title">
+            <MenuFlyoutItem Command="{x:Bind ViewModel.CopySelectedItemCommand, Mode=OneWay}" CommandParameter="Title" Text="Copy Title">
                 <MenuFlyoutItem.Icon>
-                    <SymbolIcon Symbol="Copy" />
+                    <FontIcon Glyph="&#xE8C8;" />
                 </MenuFlyoutItem.Icon>
             </MenuFlyoutItem>
-            <MenuFlyoutItem Command="{x:Bind ViewModel.CopySelectedItemCommand, Mode=OneWay}"
-                            CommandParameter="Link"
-                            Text="Copy Link">
+            <MenuFlyoutItem Command="{x:Bind ViewModel.CopySelectedItemCommand, Mode=OneWay}" CommandParameter="Link" Text="Copy Link">
                 <MenuFlyoutItem.Icon>
-                    <SymbolIcon Symbol="Copy" />
+                    <FontIcon Glyph="&#xE71B;" />
                 </MenuFlyoutItem.Icon>
             </MenuFlyoutItem>
-            <MenuFlyoutItem Command="{x:Bind ViewModel.CopySelectedItemCommand, Mode=OneWay}"
-                            CommandParameter="All"
-                            Text="Copy All">
+            <MenuFlyoutSeparator />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.CopySelectedItemCommand, Mode=OneWay}" CommandParameter="All" Text="Copy All">
                 <MenuFlyoutItem.Icon>
-                    <SymbolIcon Symbol="Copy" />
+                    <FontIcon Glyph="&#xE8C8;" />
                 </MenuFlyoutItem.Icon>
             </MenuFlyoutItem>
         </MenuFlyout>
+
+        <Style x:Key="QueueRowStyle" BasedOn="{StaticResource DefaultListViewItemStyle}" TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="MinHeight" Value="44" />
+            <Setter Property="Padding" Value="12,6" />
+        </Style>
     </Page.Resources>
 
-    <Grid Padding="10">
+    <Grid Padding="16,10,16,16" RowSpacing="8">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <CommandBar HorizontalAlignment="Left"
-                    DefaultLabelPosition="Right"
-                    OverflowButtonVisibility="Collapsed">
-            <AppBarButton Command="{x:Bind ViewModel.AddGameCommand}"
-                          Icon="Add"
-                          Label="Add New Game">
-                <AppBarButton.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="N"
-                                         Modifiers="Control" />
-                </AppBarButton.KeyboardAccelerators>
-            </AppBarButton>
-            <AppBarButton Command="{x:Bind ViewModel.EditGameCommand}"
-                          Icon="Edit"
-                          Label="Edit Game">
-                <AppBarButton.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="E"
-                                         Modifiers="Control" />
-                </AppBarButton.KeyboardAccelerators>
-            </AppBarButton>
-            <AppBarButton Command="{x:Bind ViewModel.DeleteGameCommand}"
-                          Icon="Delete"
-                          Label="Delete Game(s)">
-                <AppBarButton.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="D"
-                                         Modifiers="Control" />
-                    <KeyboardAccelerator Key="Delete" />
-                </AppBarButton.KeyboardAccelerators>
-            </AppBarButton>
-            <AppBarSeparator />
-            <AppBarButton Command="{x:Bind ViewModel.RefreshCommand}"
-                          Icon="Refresh"
-                          Label="Refresh">
-                <AppBarButton.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="R"
-                                         Modifiers="Control" />
-                    <KeyboardAccelerator Key="F5" />
-                </AppBarButton.KeyboardAccelerators>
-            </AppBarButton>
-        </CommandBar>
 
-        <NavigationViewItemSeparator Grid.Row="1"
-                                     VerticalAlignment="Top" />
+        <!--  Toolbar + item count  -->
+        <Grid>
+            <CommandBar HorizontalAlignment="Left" Background="Transparent" DefaultLabelPosition="Right" OverflowButtonVisibility="Collapsed">
+                <AppBarButton Command="{x:Bind ViewModel.AddGameCommand}" Icon="Add" Label="Add New Game" ToolTipService.ToolTip="Add new game (Ctrl+N)">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="N" Modifiers="Control" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
+                <AppBarButton Command="{x:Bind ViewModel.EditGameCommand}" Icon="Edit" Label="Edit Game" ToolTipService.ToolTip="Edit game (Ctrl+E)">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="E" Modifiers="Control" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
+                <AppBarButton Command="{x:Bind ViewModel.DeleteGameCommand}" Icon="Delete" Label="Delete Game(s)" ToolTipService.ToolTip="Delete selected (Del)">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="D" Modifiers="Control" />
+                        <KeyboardAccelerator Key="Delete" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
+                <AppBarSeparator />
+                <AppBarButton Command="{x:Bind ViewModel.RefreshCommand}" Icon="Refresh" Label="Refresh" ToolTipService.ToolTip="Refresh (F5)">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="R" Modifiers="Control" />
+                        <KeyboardAccelerator Key="F5" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
+            </CommandBar>
+        </Grid>
 
-        <AutoSuggestBox Grid.Row="1"
-                        PlaceholderText="Search Games..."
-                        QueryIcon="Find"
-                        Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        TextChanged="AutoSuggestBox_TextChanged" />
+        <!--  Search  -->
+        <AutoSuggestBox Grid.Row="1" HorizontalAlignment="Stretch" PlaceholderText="Search by game id, title or link..." QueryIcon="Find" Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="AutoSuggestBox_TextChanged" />
 
-        <ListView x:Name="MyListView"
-                  Grid.Row="2"
-                  Margin="0,10"
-                  ItemsSource="{x:Bind ViewModel.FilteredGames, Mode=OneWay}"
-                  SelectionChanged="MyListView_SelectionChanged">
-            <ListView.HeaderTemplate>
-                <DataTemplate>
-                    <Grid Margin="10,0,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}"
-                                   Text="Game Id" />
-                        <TextBlock Grid.Column="1"
-                                   Style="{ThemeResource SubtitleTextBlockStyle}"
-                                   Text="Title" />
-                        <TextBlock Grid.Column="2"
-                                   Style="{ThemeResource SubtitleTextBlockStyle}"
-                                   Text="Link" />
-                    </Grid>
-                </DataTemplate>
-            </ListView.HeaderTemplate>
+        <!--  Column header (sticky, outside the list)  -->
+        <Border Grid.Row="2" Padding="12,0" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="{StaticResource ControlCornerRadius}">
+            <Grid MinHeight="36" ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{StaticResource GameIdColumnWidth}" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{ThemeResource BodyStrongTextBlockStyle}" Text="Game Id" />
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{ThemeResource BodyStrongTextBlockStyle}" Text="Title" />
+                <TextBlock Grid.Column="2" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{ThemeResource BodyStrongTextBlockStyle}" Text="Link" />
+            </Grid>
+        </Border>
+
+        <!--  List  -->
+        <ListView x:Name="MyListView" Grid.Row="3" ItemContainerStyle="{StaticResource QueueRowStyle}" ItemsSource="{x:Bind ViewModel.FilteredGames, Mode=OneWay}" SelectionChanged="MyListView_SelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="database:QueueGames">
-                    <Grid ContextFlyout="{StaticResource DataTableMenuFlyout}" RightTapped="DataRow_RightTapped">
+                    <Grid ColumnSpacing="16" ContextFlyout="{StaticResource DataTableMenuFlyout}" RightTapped="DataRow_RightTapped">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="{StaticResource GameIdColumnWidth}" />
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="3*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock VerticalAlignment="Center"
-                                   Style="{ThemeResource BaseTextBlockStyle}"
-                                   Text="{x:Bind GameId}" />
-                        <TextBlock Grid.Column="1"
-                                   VerticalAlignment="Center"
-                                   Style="{ThemeResource BaseTextBlockStyle}"
-                                   Text="{x:Bind Title}" />
-                        <TextBlock Grid.Column="2"
-                                   VerticalAlignment="Center"
-                                   Style="{ThemeResource BaseTextBlockStyle}"
-                                   Text="{x:Bind Link}" />
+
+                        <TextBlock VerticalAlignment="Center" FontFamily="Consolas" Style="{ThemeResource BodyStrongTextBlockStyle}" Text="{x:Bind GameId}" />
+                        <TextBlock Grid.Column="1" VerticalAlignment="Center" Style="{ThemeResource BodyTextBlockStyle}" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" ToolTipService.ToolTip="{x:Bind Title}" />
+                        <TextBlock Grid.Column="2" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{ThemeResource CaptionTextBlockStyle}" Text="{x:Bind Link}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" ToolTipService.ToolTip="{x:Bind Link}" />
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem" BasedOn="{StaticResource DefaultListViewItemStyle}">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                </Style>
-            </ListView.ItemContainerStyle>
         </ListView>
 
-        <ProgressRing Grid.Row="2"
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Center"
-                      IsActive="{x:Bind ViewModel.IsProcessActive, Mode=OneWay}" />
+        <!--  Empty state  -->
+        <StackPanel Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="6" Visibility="{x:Bind local:QueueGamesPage.ShowWhenEmpty(ViewModel.FilteredGames.Count, ViewModel.IsProcessActive), Mode=OneWay}">
+            <FontIcon FontSize="36" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Glyph="&#xE7FC;" />
+            <TextBlock HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{ThemeResource BodyStrongTextBlockStyle}" Text="No games in the queue" />
+            <TextBlock HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{ThemeResource CaptionTextBlockStyle}" Text="Press Ctrl+N to add one." />
+        </StackPanel>
+
+        <ProgressRing Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="{x:Bind ViewModel.IsProcessActive, Mode=OneWay}" />
     </Grid>
 </Page>
