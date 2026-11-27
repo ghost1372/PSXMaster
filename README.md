@@ -9,6 +9,18 @@ See [PSXMaster Releases](https://github.com/ghost1372/PSXMaster/releases) or Dow
 	&mode=mini">
 	<img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200"/>
 </a>
+
+---
+
+
+ ![PSXMaster](https://raw.githubusercontent.com/Ghost1372/App-Resources/refs/heads/main/PSXMaster/1.png)
+
+ ![PSXMaster](https://raw.githubusercontent.com/Ghost1372/App-Resources/refs/heads/main/PSXMaster/2.png)
+
+ ![PSXMaster](https://raw.githubusercontent.com/Ghost1372/App-Resources/refs/heads/main/PSXMaster/3.png)
+
+ ![PSXMaster](https://raw.githubusercontent.com/Ghost1372/App-Resources/refs/heads/main/PSXMaster/4.png)
+
 ---
 
 ## 🧑‍💻 Contributing 🧑‍💻
@@ -39,14 +51,3 @@ If you encounter any issues or have feedback, please report them [here](https://
 > If you experience connection issues, go to your PC’s Network and Sharing Center and enable network sharing.
 
 ![image](https://github.com/user-attachments/assets/2d83c33c-9107-42de-a2f8-417b438dcead)
-
-
----
-
- ![PSXMaster](https://raw.githubusercontent.com/Ghost1372/App-Resources/refs/heads/main/PSXMaster/1.png)
-
- ![PSXMaster](https://raw.githubusercontent.com/Ghost1372/App-Resources/refs/heads/main/PSXMaster/2.png)
-
- ![PSXMaster](https://raw.githubusercontent.com/Ghost1372/App-Resources/refs/heads/main/PSXMaster/3.png)
-
- ![PSXMaster](https://raw.githubusercontent.com/Ghost1372/App-Resources/refs/heads/main/PSXMaster/4.png)
