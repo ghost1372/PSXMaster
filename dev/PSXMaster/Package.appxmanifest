@@ -15,7 +15,7 @@
 	<Identity
 	  Name="34768MahdiHosseini.PSXMaster"
 	  Publisher="CN=EBE7C7BF-0B02-4AC9-AAE4-FC932096CBF0"
-	  Version="0.0.1.0"/>
+	  Version="1.5.1.0"/>
 
 	<mp:PhoneIdentity PhoneProductId="caf9b1a2-38ff-4ea1-ae91-578dfbde7098" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
