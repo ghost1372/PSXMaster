@@ -36,13 +36,13 @@ public sealed partial class DeleteGameContentDialog : ContentDialog
                     }
                 }
                 await db.SaveChangesAsync();
-                Growl.SuccessGlobal("Selected Items Deleted");
+                Growl.ShowSuccessGlobal("Selected Items Deleted");
             }
         }
         catch (Exception ex)
         {
             Logger?.Error(ex.Message);
-            Growl.ErrorGlobal("Error", ex.Message);
+            Growl.ShowErrorGlobal("Error", ex.Message);
         }
     }
 

@@ -11,27 +11,6 @@ See [PSXMaster Releases](https://github.com/ghost1372/PSXMaster/releases) or Dow
 </a>
 ---
 
-## ⚙️ Compile Source Code
-
-> [!TIP]
-> Please confirm that your development environment meets the requirements before compiling.
-
-#### 1. 🖥️ Visual Studio 2022 
-Ensure that your installation includes the appropriate workloads:  
-- On the `Workloads` tab of the Visual Studio installation dialog box, select:  
-  - **.NET Desktop Development**  
-  - **WinUI Application Development**  
-
-#### 2. 🛠️ .NET SDKs  
-- Ensure .NET versions `9.x` are installed.
-
-#### 3. 📂 Solution Format  
-- This project uses the new **SLNX format** for solutions.
-- ⚠️ **Note:** This feature is currently in preview and you need to enable it from **Tools -> Manage Preview Features**.
-![DevWinUI](https://raw.githubusercontent.com/Ghost1372/DevWinUI-Resources/refs/heads/main/DevWinUI-Docs/SLNX.png)
-
-Make sure your environment matches these requirements to avoid any issues during compilation.
-
 ## 🧑‍💻 Contributing 🧑‍💻
 Found a bug? Want to contribute? We’d love your input!
 Happy coding! 🖥️💡

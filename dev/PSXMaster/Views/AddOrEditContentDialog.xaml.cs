@@ -69,7 +69,7 @@ public sealed partial class AddOrEditContentDialog : ContentDialog
     {
         if (string.IsNullOrEmpty(this.GameId) || string.IsNullOrEmpty(this.GameTitle))
         {
-            Growl.ErrorGlobal("GameId or Title is null or empty");
+            Growl.ShowErrorGlobal("GameId or Title is null or empty");
             return;
         }
 
@@ -90,7 +90,7 @@ public sealed partial class AddOrEditContentDialog : ContentDialog
 
                         await db.QueueGames.AddAsync(game);
                         await db.SaveChangesAsync();
-                        Growl.SuccessGlobal($"{GameId} Added");
+                        Growl.ShowSuccessGlobal($"{GameId} Added");
 
                         GameId = string.Empty;
                         GameTitle = string.Empty;
@@ -111,7 +111,7 @@ public sealed partial class AddOrEditContentDialog : ContentDialog
 
                         await db.SaveChangesAsync();
                         this.Hide();
-                        Growl.SuccessGlobal($"{GameId} Updated");
+                        Growl.ShowSuccessGlobal($"{GameId} Updated");
                     }
                 }
             }
@@ -119,7 +119,7 @@ public sealed partial class AddOrEditContentDialog : ContentDialog
         catch (Exception ex)
         {
             Logger?.Error(ex.Message);
-            Growl.ErrorGlobal("Error", ex.Message);
+            Growl.ShowErrorGlobal("Error", ex.Message);
         }
     }
 }

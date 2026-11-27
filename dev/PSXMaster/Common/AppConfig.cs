@@ -1,29 +1,30 @@
-﻿using Nucs.JsonSettings.Examples;
+﻿using Nucs.JsonSettings;
+using Nucs.JsonSettings.Autosave;
 using Nucs.JsonSettings.Modulation;
 using PSXMaster.Models;
 
 namespace PSXMaster.Common;
 
-[GenerateAutoSaveOnChange]
+[Autosave]
 public partial class AppConfig : NotifiyingJsonSettings, IVersionable
 {
-    [EnforcedVersion("1.3.0.0")]
-    public virtual Version Version { get; set; } = new Version(1, 3, 0, 0);
+    [EnforcedVersion("1.5.0.0")]
+    public virtual Version Version { get; set; } = new Version(1, 5, 0, 0);
 
-    private string fileName { get; set; } = Constants.AppConfigPath;
+    public override string FileName { get; set; } = Constants.AppConfigPath;
 
-    private bool useDeveloperMode { get; set; }
-    private string lastUpdateCheck { get; set; }
+    public bool UseDeveloperMode { get; set; }
+    public string LastUpdateCheck { get; set; }
 
-    private string? rule { get; set; } = "*.pkg|*.pup";
+    public string? Rule { get; set; } = "*.pkg|*.pup";
 
-    private string? host { get; set; } = "";
+    public string? Host { get; set; } = "";
 
-    private bool isAutoFindFile { get; set; } = true;
+    public bool IsAutoFindFile { get; set; } = true;
 
-    private string? localFileDirectory { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "PSXMaster");
+    public string? LocalFileDirectory { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "PSXMaster");
 
-    private BufferModel transferBuffer { get; set; } = new BufferModel { Size = 2 * 1024 * 1024, Name = "2 MB" };
+    public BufferModel TransferBuffer { get; set; } = new BufferModel { Size = 2 * 1024 * 1024, Name = "2 MB" };
 
-    private string dBPath { get; set; } = Constants.DatabaseFilePath;
+    public string DBPath { get; set; } = Constants.DatabaseFilePath;
 }

@@ -7,12 +7,6 @@
       xmlns:local="using:PSXMaster"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d">
-    <dev:MainLandingPage Foreground="White"
-                         HeaderImage="{ThemeResource HeaderCover}"
-                         HeaderImageHeight="250"
-                         HeaderSubtitleText="{x:Bind dev:ProcessInfoHelper.Version}"
-                         HeaderText="{x:Bind dev:ProcessInfoHelper.ProductName}"
-                         JsonNavigationService="{x:Bind local:App.Current.NavService}"
-                         NewGroupText="" />
+    <dev:MainLandingPage Foreground="White" HeaderImage="{ThemeResource HeaderCover}" HeaderImageHeight="250" HeaderSubtitleText="{x:Bind dev:ProcessInfoHelper.Version}" HeaderText="{x:Bind dev:ProcessInfoHelper.ProductName}" NewGroupText="" />
 </Page>
 
